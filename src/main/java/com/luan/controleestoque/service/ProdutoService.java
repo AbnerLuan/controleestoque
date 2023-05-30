@@ -30,4 +30,25 @@ public class ProdutoService {
     public void deleteById(Long id) {
         produtoRepository.deleteById(id);
     }
+
+    public Object save(Produto produto) {
+        return produtoRepository.save(produto);
+    }
+
+    public Produto update(Produto produtoNovo, Long id) {
+        Produto produtoAntigo = findById(produtoNovo.getId());
+        produtoAntigo.setNomeProduto(produtoNovo.getNomeProduto());
+        produtoAntigo.setTipoProduto(produtoNovo.getTipoProduto());
+        produtoAntigo.setMarcaProduto(produtoNovo.getMarcaProduto());
+        produtoAntigo.setQuantidadeEstoque(produtoNovo.getQuantidadeEstoque());
+        produtoAntigo.setValorUnitario(produtoNovo.getValorUnitario());
+        produtoAntigo.setValorTotal(produtoNovo.getValorTotal());
+        produtoAntigo.setEan(produtoNovo.getEan());
+        produtoAntigo.setCadastroSite(produtoAntigo.isCadastroSite());
+        produtoAntigo.setCadastroMl(produtoAntigo.isCadastroMl());
+        produtoAntigo.setCadastroShoppe(produtoAntigo.isCadastroShoppe());
+        produtoAntigo.setBlog(produtoAntigo.isBlog());
+
+        return produtoRepository.save(produtoNovo);
+    }
 }
