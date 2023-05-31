@@ -1,6 +1,7 @@
 package com.luan.controleestoque;
 
 import com.luan.controleestoque.model.Produto;
+import com.luan.controleestoque.model.Venda;
 import com.luan.controleestoque.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -8,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.Arrays;
+import java.util.Date;
 
 @SpringBootApplication
 public class ControleestoqueApplication  implements CommandLineRunner {
