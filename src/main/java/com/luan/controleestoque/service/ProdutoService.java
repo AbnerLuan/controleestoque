@@ -31,12 +31,12 @@ public class ProdutoService {
         produtoRepository.deleteById(id);
     }
 
-    public Object save(Produto produto) {
+    public Produto save(Produto produto) {
         return produtoRepository.save(produto);
     }
 
     public Produto update(Produto produtoNovo, Long id) {
-        Produto produtoAntigo = findById(produtoNovo.getId());
+        Produto produtoAntigo = findById(produtoNovo.getProdutoId());
         produtoAntigo.setNomeProduto(produtoNovo.getNomeProduto());
         produtoAntigo.setTipoProduto(produtoNovo.getTipoProduto());
         produtoAntigo.setMarcaProduto(produtoNovo.getMarcaProduto());

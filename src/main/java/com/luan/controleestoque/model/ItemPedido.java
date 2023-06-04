@@ -1,15 +1,12 @@
 package com.luan.controleestoque.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
@@ -20,11 +17,29 @@ public class ItemPedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long itemId;
 
-    private Long vendaId;
+    @ManyToOne
+    private Produto produto;
 
-    private Long produtoId;
+    private String nomeProduto;
+
+    @ManyToOne
+    @JsonIgnore
+//    @JoinColumn(name = "venda_Id")
+    private Venda venda;
+
+
+    private int quantidade;
 
     private double valorUnit;
 
-    private double valorTotal;
+    private double valorTotalItem;
+
+    public ItemPedido(Long itemId, String nomeProduto, Venda venda,int quantidade, double valorUnit) {
+        this.itemId = itemId;
+        this.nomeProduto = nomeProduto;
+        this.venda = venda;
+        this.quantidade = quantidade;
+        this.valorUnit = valorUnit;
+        this.valorTotalItem = getQuantidade() * getValorUnit();
+    }
 }
