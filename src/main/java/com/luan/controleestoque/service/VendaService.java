@@ -1,5 +1,6 @@
 package com.luan.controleestoque.service;
 
+import com.luan.controleestoque.model.ItemPedido;
 import com.luan.controleestoque.model.Venda;
 import com.luan.controleestoque.repository.VendaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,14 +31,12 @@ public class VendaService {
 
 
     public Venda update(Venda venda, Long id) {
-        Venda novaVenda = findById(venda.getVendaId());
-        novaVenda.setCanalVenda(venda.getCanalVenda());
-        novaVenda.setDataVenda(venda.getDataVenda());
-        novaVenda.setValorTotalVenda(venda.getValorTotalVenda());
-        novaVenda.setNomeCliente(venda.getNomeCliente());
-        novaVenda.setItens(venda.getItens());
-
-        return vendaRepository.save(venda);
+       venda.setVendaId(id);
+       Venda vendaAntiga = findById(id);
+//       vendaAntiga.getItens().get().get
+       vendaAntiga = new Venda(venda);
+//     ItemPedido itemPedido = new ItemPedido(venda.getItens());
+        return vendaRepository.save(vendaAntiga);
     }
 }
 

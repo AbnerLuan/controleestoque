@@ -43,11 +43,11 @@ public class ControleestoqueApplication  implements CommandLineRunner {
         Venda v4 = new Venda(null, "Joana", "3", 0, LocalDate.now());
         Venda v5 = new Venda(null, "Maria", "5", 0, LocalDate.now());
 
-        ItemPedido item1 = new ItemPedido(null,p5.getNomeProduto(),v1,2, 550.00);
-        ItemPedido item2 = new ItemPedido(null, p1.getNomeProduto(),v3, 1, 700.00);
-        ItemPedido item3 = new ItemPedido(null, p4.getNomeProduto(),v5, 10, 40.00);
-        ItemPedido item4 = new ItemPedido(null, p3.getNomeProduto(),v2, 11, 230.00);
-        ItemPedido item5 = new ItemPedido(null, p2.getNomeProduto(),v4, 5, 100.00);
+        ItemPedido item1 = new ItemPedido(null,p1.getNomeProduto(),v1,2, 550.00);
+        ItemPedido item2 = new ItemPedido(null, p2.getNomeProduto(),v1, 1, 700.00);
+        ItemPedido item3 = new ItemPedido(null, p3.getNomeProduto(),v1, 10, 40.00);
+        ItemPedido item4 = new ItemPedido(null, p4.getNomeProduto(),v1, 11, 230.00);
+        ItemPedido item5 = new ItemPedido(null, p5.getNomeProduto(),v1, 5, 100.00);
 
 
 

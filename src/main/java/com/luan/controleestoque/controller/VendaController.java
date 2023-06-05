@@ -29,16 +29,18 @@ public class VendaController {
 
     @PostMapping
     public ResponseEntity<Venda> create(@RequestBody Venda venda){
-        return ResponseEntity.ok().body((Venda) vendaService.save(venda));
+        return ResponseEntity.ok().body(vendaService.save(venda));
     }
 
     @PutMapping(path = "/{id}")
     public ResponseEntity<Venda> update(@RequestBody Venda venda, @PathVariable Long id) {
-        return ResponseEntity.ok().body((Venda) vendaService.update(venda, id));
+        Venda vendaAtualizada = vendaService.update(venda, id);
+        return ResponseEntity.ok().body(vendaAtualizada);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Venda> deleteByID(@PathVariable Long id) {
+        vendaService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 }

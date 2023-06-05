@@ -29,12 +29,12 @@ public class ProdutoController {
 
     @PostMapping
     public ResponseEntity<Produto> create(@RequestBody Produto produto){
-        return ResponseEntity.ok().body((Produto) produtoService.save(produto));
+        return ResponseEntity.ok().body(produtoService.save(produto));
     }
 
     @PutMapping(path = "/{id}")
     public ResponseEntity<Produto> update(@RequestBody Produto produto, @PathVariable Long id){
-        return ResponseEntity.ok().body((Produto) produtoService.update(produto, id));
+        return ResponseEntity.ok().body(produtoService.update(produto, id));
     }
 
     @DeleteMapping("/{id}")
