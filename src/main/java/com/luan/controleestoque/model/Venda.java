@@ -17,11 +17,9 @@ import java.util.List;
 @Entity
 public class Venda {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long vendaId;
-
 
     private String nomeCliente;
 
@@ -32,7 +30,7 @@ public class Venda {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataVenda = LocalDate.now();
 
-    @OneToMany(mappedBy = "venda")
+    @OneToMany(fetch= FetchType.LAZY, cascade= CascadeType.ALL, mappedBy = "venda")
     private List<ItemPedido> itens;
 
     public Venda(Long vendaId, String nomeCliente, String canalVenda, double valorTotalVenda, LocalDate dataVenda) {
@@ -41,5 +39,14 @@ public class Venda {
         this.canalVenda = canalVenda;
         this.valorTotalVenda = valorTotalVenda;
         this.dataVenda = dataVenda;
+    }
+
+    public Venda(Venda venda) {
+        this.vendaId = venda.getVendaId();
+        this.nomeCliente = venda.getNomeCliente();
+        this.canalVenda = venda.getCanalVenda();
+        this.valorTotalVenda = venda.getValorTotalVenda();
+        this.dataVenda = venda.getDataVenda();
+        this.itens = venda.getItens();
     }
 }

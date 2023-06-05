@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @NoArgsConstructor
 @Getter
 @Setter
@@ -22,11 +24,10 @@ public class ItemPedido {
 
     private String nomeProduto;
 
-    @ManyToOne
     @JsonIgnore
-//    @JoinColumn(name = "venda_Id")
+    @ManyToOne
+    @JoinColumn(name = "venda_Id")
     private Venda venda;
-
 
     private int quantidade;
 
@@ -42,4 +43,5 @@ public class ItemPedido {
         this.valorUnit = valorUnit;
         this.valorTotalItem = getQuantidade() * getValorUnit();
     }
+
 }
