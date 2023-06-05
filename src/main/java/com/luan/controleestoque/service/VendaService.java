@@ -31,11 +31,15 @@ public class VendaService {
 
 
     public Venda update(Venda venda, Long id) {
-       venda.setVendaId(id);
-       Venda vendaAntiga = findById(id);
-//       vendaAntiga.getItens().get().get
-       vendaAntiga = new Venda(venda);
-//     ItemPedido itemPedido = new ItemPedido(venda.getItens());
+        venda.setVendaId(id);
+        Venda vendaAntiga = findById(id);
+        vendaAntiga = new Venda(venda);
+
+        for (ItemPedido item : venda.getItens()) {
+            item.setVenda(vendaAntiga);
+        }
+        vendaAntiga.setItens(venda.getItens());
+
         return vendaRepository.save(vendaAntiga);
     }
 }

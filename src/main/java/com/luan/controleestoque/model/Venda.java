@@ -30,7 +30,7 @@ public class Venda {
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataVenda = LocalDate.now();
 
-    @OneToMany(mappedBy = "venda", cascade = {CascadeType.ALL})
+    @OneToMany(fetch= FetchType.LAZY, cascade= CascadeType.ALL, mappedBy = "venda")
     private List<ItemPedido> itens;
 
     public Venda(Long vendaId, String nomeCliente, String canalVenda, double valorTotalVenda, LocalDate dataVenda) {

@@ -24,8 +24,8 @@ public class ItemPedido {
 
     private String nomeProduto;
 
-    @ManyToOne
     @JsonIgnore
+    @ManyToOne
     @JoinColumn(name = "venda_Id")
     private Venda venda;
 
@@ -44,21 +44,4 @@ public class ItemPedido {
         this.valorTotalItem = getQuantidade() * getValorUnit();
     }
 
-    public ItemPedido(ItemPedido itemPedido) {
-        this.itemId = itemPedido.getItemId();
-        this.nomeProduto = itemPedido.getNomeProduto();
-        this.venda = itemPedido.getVenda();
-        this.quantidade = itemPedido.getQuantidade();
-        this.valorUnit = itemPedido.getValorUnit();
-        this.valorTotalItem = getQuantidade() * getValorUnit();
-    }
-
-//    public ItemPedido(List<ItemPedido> itens) {
-//        this.itemId = itens.
-//        this.nomeProduto = itens.getNomeProduto();
-//        this.venda = itens.getVenda();
-//        this.quantidade = itens.getQuantidade();
-//        this.valorUnit = itens.getValorUnit();
-//        this.valorTotalItem = getQuantidade() * getValorUnit();
-//    }
 }
