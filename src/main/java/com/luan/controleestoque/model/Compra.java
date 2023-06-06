@@ -1,13 +1,14 @@
 package com.luan.controleestoque.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -18,5 +19,19 @@ public class Compra {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long compraId;
+
+    private String nomeFornecedor;
+
+    private String canalCompra;
+
+    private Long valorTotalCompra;
+
+    @OneToMany(fetch= FetchType.LAZY, cascade= CascadeType.ALL, mappedBy = "compra")
+    private List<ItemCompra> itensCompra;
+
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate dataCompra = LocalDate.now();
+
+
 }
