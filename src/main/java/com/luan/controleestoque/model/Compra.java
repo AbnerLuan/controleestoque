@@ -25,13 +25,31 @@ public class Compra {
 
     private String canalCompra;
 
-    private Long valorTotalCompra;
+    private double valorTotalCompra;
 
     @OneToMany(fetch= FetchType.LAZY, cascade= CascadeType.ALL, mappedBy = "compra")
     private List<ItemCompra> itensCompra;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate dataCompra = LocalDate.now();
+
+    public Compra(Long compraId, String nomeFornecedor, String canalCompra, double valorTotalCompra, LocalDate dataCompra) {
+        this.compraId = compraId;
+        this.nomeFornecedor = nomeFornecedor;
+        this.canalCompra = canalCompra;
+        this.valorTotalCompra = valorTotalCompra;
+        this.dataCompra = getDataCompra();
+        this.itensCompra = getItensCompra();
+    }
+
+    public Compra(Compra compra) {
+        this.compraId = compraId;
+        this.nomeFornecedor = nomeFornecedor;
+        this.canalCompra = canalCompra;
+        this.valorTotalCompra = valorTotalCompra;
+        this.dataCompra = getDataCompra();
+        this.itensCompra = getItensCompra();
+    }
 
 
 }
