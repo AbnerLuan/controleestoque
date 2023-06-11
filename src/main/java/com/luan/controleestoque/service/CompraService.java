@@ -4,6 +4,8 @@ import com.luan.controleestoque.model.Compra;
 import com.luan.controleestoque.model.ItemCompra;
 import com.luan.controleestoque.model.ItemPedido;
 import com.luan.controleestoque.repository.CompraRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +27,8 @@ public class CompraService {
 
     }
 
-    public List<Compra> findAll() {return compraRepository.findAll();}
+    public Page<Compra> findAll(Pageable pageable) {
+        return compraRepository.findAll(pageable);}
 
 
     public Compra save(Compra compra) {return compraRepository.save(compra);}

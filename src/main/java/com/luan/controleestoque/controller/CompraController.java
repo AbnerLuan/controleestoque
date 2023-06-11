@@ -3,6 +3,8 @@ package com.luan.controleestoque.controller;
 import com.luan.controleestoque.model.Compra;
 import com.luan.controleestoque.service.CompraService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,8 +26,9 @@ public class CompraController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Compra>> findAll() {
-        return ResponseEntity.ok().body(compraService.findAll());
+    public ResponseEntity<Page<Compra>> findAll(Pageable pageable) {
+
+        return ResponseEntity.ok().body(compraService.findAll(pageable));
     }
 
     @PostMapping

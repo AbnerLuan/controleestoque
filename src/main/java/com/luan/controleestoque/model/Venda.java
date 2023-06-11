@@ -49,13 +49,4 @@ public class Venda {
         this.dataVenda = venda.getDataVenda();
         this.itens = venda.getItens();
     }
-
-    public Venda(Venda venda) {
-        this.vendaId = venda.getVendaId();
-        this.nomeCliente = venda.getNomeCliente();
-        this.canalVenda = venda.getCanalVenda();
-        this.valorTotalVenda = venda.getValorTotalVenda();
-        this.dataVenda = venda.getDataVenda();
-        this.itens = venda.getItens();
-    }
 }
