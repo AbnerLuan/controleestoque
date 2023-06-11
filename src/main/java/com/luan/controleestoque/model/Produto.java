@@ -19,7 +19,7 @@ public class Produto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long produtoId;
 
-//    @NotNull(message = "Nome Produto é Obrigatorio.")
+    @NotNull(message = "Nome Produto é Obrigatorio.")
     private String nomeProduto;
 
     @NotNull(message = "Tipo Produto é Obrigatorio.")
