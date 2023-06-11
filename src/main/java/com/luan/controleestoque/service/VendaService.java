@@ -1,13 +1,12 @@
 package com.luan.controleestoque.service;
 
 import com.luan.controleestoque.model.ItemPedido;
-<<<<<<< HEAD
-=======
 import com.luan.controleestoque.model.Produto;
->>>>>>> luan
 import com.luan.controleestoque.model.Venda;
 import com.luan.controleestoque.repository.VendaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -26,8 +25,8 @@ public class VendaService {
         this.produtoService = produtoService;
     }
 
-    public List<Venda> findAll() {
-        List<Venda> vendas = vendaRepository.findAll();
+    public Page<Venda> findAll(Pageable pageable) {
+        Page<Venda> vendas = vendaRepository.findAll(pageable);
         for (Venda venda : vendas) {
             calcularValorTotalVenda(venda);
         }

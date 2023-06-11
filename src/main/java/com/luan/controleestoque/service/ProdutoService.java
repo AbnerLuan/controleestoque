@@ -3,6 +3,8 @@ package com.luan.controleestoque.service;
 import com.luan.controleestoque.model.Produto;
 import com.luan.controleestoque.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,8 +18,8 @@ public class ProdutoService {
     @Autowired
     public ProdutoService (ProdutoRepository produtoRepository) {this.produtoRepository = produtoRepository;}
 
-    public List<Produto> findAll() {
-        return produtoRepository.findAll();
+    public Page<Produto> findAll(Pageable pageable) {
+        return produtoRepository.findAll(pageable);
     }
 
 
