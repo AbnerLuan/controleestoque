@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor
@@ -26,7 +28,7 @@ public class Venda {
     private double valorTotalVenda;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
-    private LocalDate dataVenda = LocalDate.now();
+    protected LocalDate dataVenda = LocalDate.now();
 
     @OneToMany(fetch= FetchType.LAZY, cascade= CascadeType.ALL, mappedBy = "venda")
     private List<ItemPedido> itens;
@@ -36,7 +38,16 @@ public class Venda {
         this.nomeCliente = nomeCliente;
         this.canalVenda = canalVenda;
         this.valorTotalVenda = valorTotalVenda;
-        this.dataVenda = dataVenda;
+        this.dataVenda = LocalDate.now();
+    }
+
+    public Venda(Venda venda) {
+        this.vendaId = venda.getVendaId();
+        this.nomeCliente = venda.getNomeCliente();
+        this.canalVenda = venda.getCanalVenda();
+        this.valorTotalVenda = venda.getValorTotalVenda();
+        this.dataVenda = venda.getDataVenda();
+        this.itens = venda.getItens();
     }
 
     public Venda(Venda venda) {

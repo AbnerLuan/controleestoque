@@ -51,4 +51,13 @@ public class ProdutoService {
 
         return produtoRepository.save(produtoNovo);
     }
+
+    public List<String> findAllProdutos() {
+        return produtoRepository.findAllProdutos();
+    }
+
+
+    public Long findIdByNomeProduto(String nomeProduto) {
+        return produtoRepository.findIdByName(nomeProduto);
+    }
 }
