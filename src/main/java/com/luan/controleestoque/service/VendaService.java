@@ -1,14 +1,13 @@
 package com.luan.controleestoque.service;
 
 import com.luan.controleestoque.model.ItemPedido;
+import com.luan.controleestoque.model.Produto;
 import com.luan.controleestoque.model.Venda;
 import com.luan.controleestoque.repository.VendaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +15,13 @@ import java.util.Optional;
 public class VendaService {
 
     private final VendaRepository vendaRepository;
+    private final ProdutoService produtoService;
+
+    @Autowired
+    public VendaService(VendaRepository vendaRepository, ProdutoService produtoService) {
+        this.vendaRepository = vendaRepository;
+        this.produtoService = produtoService;
+    }
 
     public List<Venda> findAll() {
         List<Venda> vendas = vendaRepository.findAll();
@@ -39,13 +45,6 @@ public class VendaService {
         venda.setValorTotalVenda(total);
     }
 
-
-    @Autowired
-    public VendaService(VendaRepository vendaRepository) {
-        this.vendaRepository = vendaRepository;
-    }
-
-
     public Venda findById(Long id) {
         Optional<Venda> vendaOptional = vendaRepository.findById(id);
         return vendaOptional.orElseThrow(() -> new RuntimeException("Venda nao encontrada"));
@@ -61,6 +60,15 @@ public class VendaService {
 
         for (ItemPedido item : venda.getItens()) {
             item.setVenda(vendaSalva);
+
+            Long produtoId = produtoService.findIdByNomeProduto(item.getNomeProduto());
+
+            if (produtoId != null) {
+                Produto produto = new Produto();
+                produto.setProdutoId(produtoId);
+                item.setProduto(produto);
+            } else {
+            }
             item.calcularValorTotalItem();
         }
         vendaSalva.setItens(venda.getItens());
@@ -76,7 +84,6 @@ public class VendaService {
             item.setVenda(vendaAntiga);
         }
 
-        // Mantém a data original da venda antiga
         vendaAntiga.setDataVenda(vendaAntiga.getDataVenda());
 
         return vendaRepository.save(vendaAntiga);

@@ -32,7 +32,8 @@ public class ControleestoqueApplication  implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        Produto p1 = new Produto(null,"Produto1", "Celular", "Apple", 15, 7.890, 118.350, "1", true, true, true, true);
+        Produto p1 = new Produto(null,"Produto1", "Celular", "Apple",
+                15, 7.890, 118.350, "1", true, true, true, true);
         Produto p2 = new Produto(null,"Produto2", "Caderno", "Tilibra", 150, 10, 1.500, "1", true, true, true, true);
         Produto p3 = new Produto(null,"Produto3", "Vídeo-Game", "Sony", 5, 5.000, 25.000, "1", true, true, true, true);
         Produto p4 = new Produto(null,"Produto4", "Televisão", "Samsung", 14, 2.500, 35.000, "1", true, true, true, true);
@@ -44,11 +45,11 @@ public class ControleestoqueApplication  implements CommandLineRunner {
         Venda v4 = new Venda(null, "Joana", "3", 8, LocalDate.now());
         Venda v5 = new Venda(null, "Maria", "5", 9, LocalDate.now());
 
-        ItemPedido item1 = new ItemPedido(null,p1.getNomeProduto(),v1,2, 550.0);
-        ItemPedido item2 = new ItemPedido(null, p2.getNomeProduto(),v1, 1, 550.0);
-        ItemPedido item3 = new ItemPedido(null, p3.getNomeProduto(),v1, 10, 550.0);
-        ItemPedido item4 = new ItemPedido(null, p4.getNomeProduto(),v1, 11, 550.0);
-        ItemPedido item5 = new ItemPedido(null, p5.getNomeProduto(),v1, 5, 550.0);
+        ItemPedido item1 = new ItemPedido(null,p1.getNomeProduto(),p1,v1,2, 550.0);
+        ItemPedido item2 = new ItemPedido(null, p2.getNomeProduto(),p2,v1, 1, 550.0);
+        ItemPedido item3 = new ItemPedido(null, p3.getNomeProduto(),p3, v1, 10, 550.0);
+        ItemPedido item4 = new ItemPedido(null, p4.getNomeProduto(),p4, v1, 11, 550.0);
+        ItemPedido item5 = new ItemPedido(null, p5.getNomeProduto(),p5,v1, 5, 550.0);
 
 
 

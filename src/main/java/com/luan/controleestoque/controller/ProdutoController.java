@@ -2,6 +2,7 @@ package com.luan.controleestoque.controller;
 
 import com.luan.controleestoque.model.Produto;
 import com.luan.controleestoque.service.ProdutoService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,14 +37,14 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<Produto> create(@RequestBody Produto produto){
+    public ResponseEntity<Produto> create(@RequestBody @Valid Produto produto){
         Produto newObj = produtoService.save(produto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newObj.getProdutoId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<Produto> update(@RequestBody Produto produto, @PathVariable Long id){
+    public ResponseEntity<Produto> update(@RequestBody @Valid Produto produto, @PathVariable Long id){
         return ResponseEntity.ok().body(produtoService.update(produto, id));
     }
 

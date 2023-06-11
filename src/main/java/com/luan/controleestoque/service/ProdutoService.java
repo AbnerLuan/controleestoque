@@ -55,4 +55,9 @@ public class ProdutoService {
     public List<String> findAllProdutos() {
         return produtoRepository.findAllProdutos();
     }
+
+
+    public Long findIdByNomeProduto(String nomeProduto) {
+        return produtoRepository.findIdByName(nomeProduto);
+    }
 }
