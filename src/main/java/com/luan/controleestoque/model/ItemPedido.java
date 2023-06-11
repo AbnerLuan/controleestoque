@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @NoArgsConstructor
@@ -35,13 +36,17 @@ public class ItemPedido {
 
     private double valorTotalItem;
 
-    public ItemPedido(Long itemId, String nomeProduto, Venda venda,int quantidade, double valorUnit) {
+    public ItemPedido(Long itemId, String nomeProduto, Venda venda, int quantidade, double valorUnit) {
         this.itemId = itemId;
         this.nomeProduto = nomeProduto;
         this.venda = venda;
         this.quantidade = quantidade;
         this.valorUnit = valorUnit;
-        this.valorTotalItem = getQuantidade() * getValorUnit();
+        calcularValorTotalItem();
+    }
+
+    public void calcularValorTotalItem() {
+        this.valorTotalItem = quantidade * valorUnit;
     }
 
 }

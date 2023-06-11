@@ -29,7 +29,7 @@ public class Produto {
 
     private double valorTotal;
 
-    private int ean;
+    private String ean;
 
     private boolean cadastroSite;
 

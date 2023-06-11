@@ -5,9 +5,12 @@ import com.luan.controleestoque.service.ProdutoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/produtos")
 public class ProdutoController {
@@ -22,6 +25,11 @@ public class ProdutoController {
         return ResponseEntity.ok().body(produtoService.findAll());
     }
 
+    @GetMapping("/nomes")
+    public List<String> findAllProdutos() {
+        return produtoService.findAllProdutos();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Produto> findById(@PathVariable Long id) {
         return ResponseEntity.ok().body(produtoService.findById(id));
@@ -29,7 +37,9 @@ public class ProdutoController {
 
     @PostMapping
     public ResponseEntity<Produto> create(@RequestBody Produto produto){
-        return ResponseEntity.ok().body(produtoService.save(produto));
+        Produto newObj = produtoService.save(produto);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newObj.getProdutoId()).toUri();
+        return ResponseEntity.created(uri).build();
     }
 
     @PutMapping(path = "/{id}")
@@ -42,6 +52,5 @@ public class ProdutoController {
         produtoService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
 
 }
