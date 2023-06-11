@@ -62,7 +62,6 @@ public class ControleestoqueApplication  implements CommandLineRunner {
         ItemCompra itemCompra5 = new ItemCompra(null, p5.getNomeProduto(), c5, 5, 55.00);
 
 
-
         vendaRepository.saveAll(Arrays.asList(v1,v2,v3,v4,v5));
         produtoRepository.saveAll(Arrays.asList(p1,p2,p3,p4,p5));
         itemPedidoRepository.saveAll(Arrays.asList(itemPedido1,itemPedido2, itemPedido3, itemPedido4, itemPedido5));
