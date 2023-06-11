@@ -34,6 +34,7 @@ public class ItemCompra {
 
     private double valorTotalItem;
 
+
     public ItemCompra(Long itemId, String nomeProduto, Compra compra,int quantidade, double valorUnit) {
         this.itemCompraId = itemId;
         this.nomeProduto = nomeProduto;
@@ -42,5 +43,4 @@ public class ItemCompra {
         this.valorUnit = valorUnit;
         this.valorTotalItem = getQuantidade() * getValorUnit();
     }
-
 }
