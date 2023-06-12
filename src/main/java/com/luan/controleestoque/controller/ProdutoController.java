@@ -5,7 +5,10 @@ import com.luan.controleestoque.service.ProdutoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -24,9 +27,12 @@ public class ProdutoController {
     public ProdutoController(ProdutoService produtoService) {this.produtoService = produtoService;}
 
     @GetMapping
-    public ResponseEntity<List<Produto>> findAll(){
-
-        return ResponseEntity.ok().body(produtoService.findAll());
+    public ResponseEntity<Page<Produto>> findAll(@PageableDefault(sort = "nomeProduto",
+            direction = Sort.Direction.ASC,
+            page = 0,
+            size = 10) Pageable pageable){
+        Page<Produto> produtosPage = produtoService.findAll(pageable);
+        return ResponseEntity.ok().body(produtosPage);
     }
 
     @GetMapping("/nomes")

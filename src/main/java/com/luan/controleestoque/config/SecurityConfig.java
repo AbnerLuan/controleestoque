@@ -34,7 +34,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers(HttpMethod.POST).permitAll()
 //                .requestMatchers(HttpMethod.POST, "/api").permitAll()
-                .requestMatchers(HttpMethod.PUT, "/api/produtos").permitAll()
+                .requestMatchers(HttpMethod.PUT).permitAll()
                 .requestMatchers(HttpMethod.GET).permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/produtos").permitAll()
                 .requestMatchers(HttpMethod.GET, "/h2-console/**").permitAll()
@@ -57,7 +57,6 @@ public class SecurityConfig {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration().applyPermitDefaultValues();
         configuration.setAllowedMethods(Arrays.asList("POST", "GET", "PUT", "DELETE", "OPTIONS"));
-        configuration.addAllowedOrigin("http://controleestoque.s3-website-us-east-1.amazonaws.com");
         final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);
         return source;
