@@ -20,8 +20,8 @@ public class Produto {
     @Column(name = "produtoId")
     private Long produtoId;
 
-//    @NotNull(message = "Nome Produto é Obrigatorio.")
-    @Column(name = "nomeProduto")
+
+    @NotNull(message = "Nome Produto é Obrigatorio.")
     private String nomeProduto;
 
     @NotNull(message = "Tipo Produto é Obrigatorio.")
