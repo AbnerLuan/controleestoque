@@ -17,29 +17,40 @@ import java.util.UUID;
 public class Produto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "produtoId")
     private Long produtoId;
 
 //    @NotNull(message = "Nome Produto é Obrigatorio.")
+    @Column(name = "nomeProduto")
     private String nomeProduto;
 
     @NotNull(message = "Tipo Produto é Obrigatorio.")
+    @Column(name = "tipoProduto")
     private String tipoProduto;
 
     @NotNull(message = "Marca Produto é Obrigatorio.")
+    @Column(name = "marcaProduto")
     private String marcaProduto;
 
+    @Column(name = "quantidadeEstoque")
     private int quantidadeEstoque;
 
+    @Column(name = "valorUnitario")
     private double valorUnitario;
 
+    @Column(name = "valorTotal")
     private double valorTotal;
 
+    @Column(name = "ean")
     private String ean;
 
+    @Column(name = "cadastroSite")
     private boolean cadastroSite;
 
+    @Column(name = "cadastroMl" )
     private boolean cadastroMl;
 
+    @Column(name = "cadastroShoppe")
     private boolean cadastroShoppe;
 
     private boolean blog;
