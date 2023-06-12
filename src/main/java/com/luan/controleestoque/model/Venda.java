@@ -1,6 +1,7 @@
 package com.luan.controleestoque.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.luan.controleestoque.model.Enum.CanalVenda;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +24,7 @@ public class Venda {
 
     private String nomeCliente;
 
-    private String canalVenda;
+    private CanalVenda canalVenda;
 
     private double valorTotalVenda;
 
@@ -33,7 +34,7 @@ public class Venda {
     @OneToMany(fetch= FetchType.LAZY, cascade= CascadeType.ALL, mappedBy = "venda")
     private List<ItemPedido> itens;
 
-    public Venda(Long vendaId, String nomeCliente, String canalVenda, double valorTotalVenda, LocalDate dataVenda) {
+    public Venda(Long vendaId, String nomeCliente, CanalVenda canalVenda, double valorTotalVenda, LocalDate dataVenda) {
         this.vendaId = vendaId;
         this.nomeCliente = nomeCliente;
         this.canalVenda = canalVenda;

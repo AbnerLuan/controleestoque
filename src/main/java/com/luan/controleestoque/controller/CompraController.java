@@ -26,9 +26,9 @@ public class CompraController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Compra>> findAll(Pageable pageable) {
+    public ResponseEntity<List<Compra>> findAll() {
 
-        return ResponseEntity.ok().body(compraService.findAll(pageable));
+        return ResponseEntity.ok().body(compraService.findAll());
     }
 
     @PostMapping

@@ -21,22 +21,22 @@ VALUES (21, 'SALGADINHO RUFFLES', 'SALGADINHO', 'ELMA CHIPS', 1000, 10, 10.000, 
 
 
 INSERT INTO Venda (venda_Id, nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES (11, 'JOSMAR', '555', 5.200, '2020-05-11');
+VALUES (11, 'JOSMAR', 1, 5.200, '2020-05-11');
 INSERT INTO Venda (venda_Id, nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES (12, 'JOSE', '554', 5.535, '2020-06-12');
+VALUES (12, 'JOSE', 2, 5.535, '2020-06-12');
 INSERT INTO Venda (venda_Id, nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES (13, 'MARIA', '553', 55.555, '2020-02-17');
+VALUES (13, 'MARIA', 3, 55.555, '2020-02-17');
 INSERT INTO Venda (venda_Id, nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES (14, 'FLAVIA', '552', 52.500, '2020-05-21');
+VALUES (14, 'FLAVIA', 4, 52.500, '2020-05-21');
 INSERT INTO Venda (venda_Id, nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES (15, 'JESSICA', '551', 3.500, '2020-08-20');
+VALUES (15, 'JESSICA', 2, 3.500, '2020-08-20');
 INSERT INTO Venda (venda_Id, nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES (16, 'CAMILA', '545', 4.000, '2020-09-12');
+VALUES (16, 'CAMILA', 4, 4.000, '2020-09-12');
 INSERT INTO Venda (venda_Id, nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES (17, 'CAROL', '535', 4.500, '2020-08-15');
+VALUES (17, 'CAROL', 0, 4.500, '2020-08-15');
 INSERT INTO Venda (venda_Id, nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES (18, 'ANNA', '525', 5.000, '2020-12-17');
+VALUES (18, 'ANNA', 1, 5.000, '2020-12-17');
 INSERT INTO Venda (venda_Id, nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES (19, 'ANA LAURA', '515', 7.500, '2020-05-09');
+VALUES (19, 'ANA LAURA', 2, 7.500, '2020-05-09');
 INSERT INTO Venda (venda_Id, nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES (20, 'VITORIA', '505', 6.500, '2020-02-01');
+VALUES (20, 'VITORIA', 3, 6.500, '2020-02-01');

@@ -27,8 +27,8 @@ public class CompraService {
 
     }
 
-    public Page<Compra> findAll(Pageable pageable) {
-        return compraRepository.findAll(pageable);}
+    public List<Compra> findAll() {
+        return compraRepository.findAll();}
 
 
     public Compra save(Compra compra) {return compraRepository.save(compra);}

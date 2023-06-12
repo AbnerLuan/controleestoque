@@ -49,7 +49,7 @@ public class VendaService {
 
     public Venda findById(Long id) {
         Optional<Venda> vendaOptional = vendaRepository.findById(id);
-        return vendaOptional.orElseThrow(() -> new RuntimeException("VendaEnum nao encontrada"));
+        return vendaOptional.orElseThrow(() -> new RuntimeException("CanalVenda nao encontrada"));
     }
 
     public void deleteById(Long id) {
