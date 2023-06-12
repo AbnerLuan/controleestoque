@@ -25,9 +25,9 @@ public class VendaController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Venda>> findAll(Pageable pageable){
+    public ResponseEntity<List<Venda>> findAll(){
 
-        return ResponseEntity.ok().body(vendaService.findAll(pageable));
+        return ResponseEntity.ok().body(vendaService.findAll());
     }
 
     @PostMapping

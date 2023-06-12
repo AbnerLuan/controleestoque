@@ -24,9 +24,9 @@ public class ProdutoController {
     public ProdutoController(ProdutoService produtoService) {this.produtoService = produtoService;}
 
     @GetMapping
-    public ResponseEntity<Page<Produto>> findAll(Pageable pageable){
+    public ResponseEntity<List<Produto>> findAll(){
 
-        return ResponseEntity.ok().body(produtoService.findAll(pageable));
+        return ResponseEntity.ok().body(produtoService.findAll());
     }
 
     @GetMapping("/nomes")

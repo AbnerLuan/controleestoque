@@ -18,8 +18,8 @@ public class ProdutoService {
     @Autowired
     public ProdutoService (ProdutoRepository produtoRepository) {this.produtoRepository = produtoRepository;}
 
-    public Page<Produto> findAll(Pageable pageable) {
-        return produtoRepository.findAll(pageable);
+    public List<Produto> findAll() {
+        return produtoRepository.findAll();
     }
 
 
