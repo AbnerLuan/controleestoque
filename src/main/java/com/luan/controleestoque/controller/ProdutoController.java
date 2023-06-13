@@ -27,8 +27,8 @@ public class ProdutoController {
     public ProdutoController(ProdutoService produtoService) {this.produtoService = produtoService;}
 
     @GetMapping
-    public ResponseEntity<Page<Produto>> findAll(@PageableDefault(sort = "nomeProduto",
-            direction = Sort.Direction.ASC,
+    public ResponseEntity<Page<Produto>> findAll(@PageableDefault(sort = "produtoId",
+            direction = Sort.Direction.DESC,
             page = 0,
             size = 10) Pageable pageable){
         Page<Produto> produtosPage = produtoService.findAll(pageable);

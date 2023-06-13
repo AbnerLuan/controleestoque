@@ -1,5 +1,6 @@
 package com.luan.controleestoque.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -55,13 +56,13 @@ public class Produto {
 
     private boolean blog;
 
+    @JsonIgnore
     @OneToMany(fetch= FetchType.LAZY, cascade= CascadeType.ALL, mappedBy = "produto")
     private List<ItemPedido> itens;
 
-    public Produto(Long produtoId, String nomeProduto, String tipoProduto, String marcaProduto, int quantidadeEstoque,
+    public Produto(String nomeProduto, String tipoProduto, String marcaProduto, int quantidadeEstoque,
                    double valorUnitario, double valorTotal, String ean, boolean cadastroSite, boolean cadastroMl,
                    boolean cadastroShoppe, boolean blog) {
-        this.produtoId = produtoId;
         this.nomeProduto = nomeProduto;
         this.tipoProduto = tipoProduto;
         this.marcaProduto = marcaProduto;
