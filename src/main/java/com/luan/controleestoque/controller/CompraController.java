@@ -5,6 +5,8 @@ import com.luan.controleestoque.service.CompraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,9 +28,14 @@ public class CompraController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Compra>> findAll() {
+    public ResponseEntity<Page<Compra>> findAll(@PageableDefault(sort = "compraId",
+            direction = Sort.Direction.ASC,
+            page = 0,
+            size = 10) Pageable pageable) {
 
-        return ResponseEntity.ok().body(compraService.findAll());
+        Page<Compra> comprasPage = compraService.findAll(pageable);
+
+        return ResponseEntity.ok().body(comprasPage);
     }
 
     @PostMapping

@@ -138,23 +138,23 @@ VALUES
     (	 true,	 true,	 true,	 true,	'555',	'THERMALTAKE',	'FONTE TT SMART 650W WHITE',	1	,'FONTE',	436.5,	436.5	),
     (	 true,	 true,	 true,	 true,	'555',	'THERMALTAKE',	'FONTE TT SMART 500W WHITE',	1	,'FONTE',	306.24,	306.24	);
 
-INSERT INTO Venda (venda_Id, nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES (11, 'JOSMAR', 1, 5.200, '2020-05-11');
-INSERT INTO Venda (venda_Id, nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES (12, 'JOSE', 2, 5.535, '2020-06-12');
-INSERT INTO Venda (venda_Id, nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES (13, 'MARIA', 3, 55.555, '2020-02-17');
-INSERT INTO Venda (venda_Id, nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES (14, 'FLAVIA', 4, 52.500, '2020-05-21');
-INSERT INTO Venda (venda_Id, nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES (15, 'JESSICA', 2, 3.500, '2020-08-20');
-INSERT INTO Venda (venda_Id, nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES (16, 'CAMILA', 4, 4.000, '2020-09-12');
-INSERT INTO Venda (venda_Id, nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES (17, 'CAROL', 0, 4.500, '2020-08-15');
-INSERT INTO Venda (venda_Id, nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES (18, 'ANNA', 1, 5.000, '2020-12-17');
-INSERT INTO Venda (venda_Id, nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES (19, 'ANA LAURA', 2, 7.500, '2020-05-09');
-INSERT INTO Venda (venda_Id, nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES (20, 'VITORIA', 3, 6.500, '2020-02-01');
+INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
+VALUES ('JOSMAR', 1, 5.200, '2020-05-11');
+INSERT INTO Venda ( nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
+VALUES ('JOSE', 2, 5.535, '2020-06-12');
+INSERT INTO Venda ( nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
+VALUES ('MARIA', 3, 55.555, '2020-02-17');
+INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
+VALUES ('FLAVIA', 4, 52.500, '2020-05-21');
+INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
+VALUES ('JESSICA', 2, 3.500, '2020-08-20');
+INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
+VALUES ('CAMILA', 4, 4.000, '2020-09-12');
+INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
+VALUES ('CAROL', 0, 4.500, '2020-08-15');
+INSERT INTO Venda ( nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
+VALUES ('ANNA', 1, 5.000, '2020-12-17');
+INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
+VALUES ('ANA LAURA', 2, 7.500, '2020-05-09');
+INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
+VALUES ('VITORIA', 3, 6.500, '2020-02-01');

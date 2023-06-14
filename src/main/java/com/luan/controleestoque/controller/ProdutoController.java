@@ -5,7 +5,6 @@ import com.luan.controleestoque.service.ProdutoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -15,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -35,15 +35,23 @@ public class ProdutoController {
         return ResponseEntity.ok().body(produtosPage);
     }
 
+
     @GetMapping("/nomes")
     public List<String> findAllProdutos() {
         return produtoService.findAllProdutos();
     }
 
 
+    @GetMapping("/nome/{nomeProduto}")
+    public ResponseEntity<Produto> findByName(@PathVariable String nomeProduto) {
+
+        return ResponseEntity.ok().body(produtoService.findByName(nomeProduto));
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Produto> findById(@PathVariable Long id) {
-        return ResponseEntity.ok().body(produtoService.findById(id));
+        Produto nomeDoProduto = produtoService.findById(id);
+        return ResponseEntity.ok().body(nomeDoProduto);
     }
 
     @PostMapping

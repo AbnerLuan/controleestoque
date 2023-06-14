@@ -25,8 +25,8 @@ public class VendaService {
         this.produtoService = produtoService;
     }
 
-    public List<Venda> findAll() {
-        List<Venda> vendas = vendaRepository.findAll();
+    public Page<Venda> findAll(Pageable pageable) {
+        Page<Venda> vendas = vendaRepository.findAll(pageable);
         for (Venda venda : vendas) {
             calcularValorTotalVenda(venda);
         }
