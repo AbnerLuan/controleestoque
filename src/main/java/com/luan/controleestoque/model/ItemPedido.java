@@ -30,7 +30,6 @@ public class ItemPedido {
 
     @JsonIgnore
     @ManyToOne
-
     @JoinColumn(name = "venda_id")
     private Venda venda;
 
@@ -40,7 +39,7 @@ public class ItemPedido {
 
     private double valorTotalItem;
 
-    public ItemPedido(Long itemId, String nomeProduto, Produto produto, Venda venda, int quantidade, double valorUnit) {
+    public ItemPedido( String nomeProduto, Produto produto, Venda venda, int quantidade, double valorUnit) {
         this.itemId = itemId;
         this.nomeProduto = nomeProduto;
         this.produto = produto;

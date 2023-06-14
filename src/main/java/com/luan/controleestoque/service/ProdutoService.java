@@ -22,13 +22,6 @@ public class ProdutoService {
         return produtoRepository.findAll(pageable);
     }
 
-//    public Produto findByName(String nome_Produto) {
-//       Optional<Produto> produtoOptional = produtoRepository.findByName(nome_Produto);
-//        return produtoOptional.orElseThrow(()-> new RuntimeException("Verifique o nome do produto digitado! " +
-//                "Produto nao encontrado"));
-//    }
-
-
     public Produto findById(Long id) {
         Optional<Produto> produtoOptional = produtoRepository.findById(id);
         return produtoOptional.orElseThrow(() -> new RuntimeException("Produto nao encontrado"));
@@ -69,7 +62,7 @@ public class ProdutoService {
         return produtoRepository.findIdByName(nomeProduto);
     }
 
-    public Produto findByName(String nomeProduto) {
-        return produtoRepository.findByNomeProduto(nomeProduto);
+    public List<Produto> findByName(String nomeProduto) {
+        return produtoRepository.findByNomeProdutoIgnoreCaseContaining(nomeProduto);
     }
 }

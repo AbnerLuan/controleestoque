@@ -43,10 +43,11 @@ public class ProdutoController {
 
 
     @GetMapping("/nome/{nomeProduto}")
-    public ResponseEntity<Produto> findByName(@PathVariable String nomeProduto) {
-
-        return ResponseEntity.ok().body(produtoService.findByName(nomeProduto));
+    public ResponseEntity<List<Produto>> findByName(@PathVariable String nomeProduto) {
+        List<Produto> produtos = produtoService.findByName(nomeProduto);
+        return ResponseEntity.ok().body(produtos);
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Produto> findById(@PathVariable Long id) {

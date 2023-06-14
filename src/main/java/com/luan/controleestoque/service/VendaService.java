@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,10 +20,14 @@ public class VendaService {
     private final VendaRepository vendaRepository;
     private final ProdutoService produtoService;
 
+    private final ItemPedidoService itemPedidoService;
+
     @Autowired
-    public VendaService(VendaRepository vendaRepository, ProdutoService produtoService) {
+    public VendaService(VendaRepository vendaRepository, ProdutoService produtoService,
+                        ItemPedidoService itemPedidoService) {
         this.vendaRepository = vendaRepository;
         this.produtoService = produtoService;
+        this.itemPedidoService = itemPedidoService;
     }
 
     public Page<Venda> findAll(Pageable pageable) {
@@ -59,8 +64,65 @@ public class VendaService {
     public Venda save(Venda venda) {
         Venda vendaSalva = new Venda(venda);
         vendaSalva.setDataVenda(LocalDate.now());
+        List<ItemPedido> itensAtualizados = prepararItensSave(venda.getItens(), vendaSalva);
+        vendaSalva.setItens(itensAtualizados);
+        vendaRepository.save(vendaSalva);
+        return vendaSalva;
+    }
 
-        for (ItemPedido item : venda.getItens()) {
+
+    public Venda update(Long id, Venda venda) {
+        Venda vendaAntiga = findById(id);
+        vendaAntiga = new Venda(venda);
+        vendaAntiga.setVendaId(id);
+        List<ItemPedido> itensAtualizados = prepararItens(venda.getItens(), vendaAntiga);
+        vendaAntiga.setItens(itensAtualizados);
+        vendaAntiga.setDataVenda(vendaAntiga.getDataVenda());
+        return vendaRepository.save(vendaAntiga);
+    }
+
+    private List<ItemPedido> prepararItens(List<ItemPedido> itensNovos, Venda vendaAntiga) {
+        List<ItemPedido> itensAtualizados = new ArrayList<>();
+
+        for (ItemPedido itemNovo : itensNovos) {
+            ItemPedido itemAntigo = null;
+
+            for (ItemPedido item : vendaAntiga.getItens()) {
+                if (item.getItemId() != null && item.getItemId().equals(itemNovo.getItemId())) {
+                    itemAntigo = item;
+                    break;
+                }
+            }
+
+            if (itemAntigo != null) {
+                if (!itemAntigo.equals(itemNovo)) {
+                    itemAntigo.setNomeProduto(itemNovo.getNomeProduto());
+                    itemAntigo.setQuantidade(itemNovo.getQuantidade());
+                    itemAntigo.setValorUnit(itemNovo.getValorUnit());
+                    itemAntigo.calcularValorTotalItem();
+                }
+                itensAtualizados.add(itemAntigo);
+            } else {
+                itemNovo.setVenda(vendaAntiga);
+                itemNovo.calcularValorTotalItem();
+                itensAtualizados.add(itemNovo);
+            }
+        }
+
+        List<ItemPedido> itensAntigos = new ArrayList<>(vendaAntiga.getItens());
+        itensAntigos.removeAll(itensAtualizados);
+        for (ItemPedido itemAntigo : itensAntigos) {
+            itemPedidoService.delete(itemAntigo);
+        }
+
+        return itensAtualizados;
+    }
+
+
+    private List<ItemPedido> prepararItensSave(List<ItemPedido> itens, Venda vendaSalva) {
+        List<ItemPedido> itensAtualizados = new ArrayList<>();
+
+        for (ItemPedido item : itens) {
             item.setVenda(vendaSalva);
 
             Long produtoId = produtoService.findIdByNomeProduto(item.getNomeProduto());
@@ -69,27 +131,13 @@ public class VendaService {
                 Produto produto = new Produto();
                 produto.setProdutoId(produtoId);
                 item.setProduto(produto);
-            } else {
             }
+
             item.calcularValorTotalItem();
-        }
-        vendaSalva.setItens(venda.getItens());
-        vendaRepository.save(vendaSalva);
-        return vendaSalva;
-    }
-
-    public Venda update(Venda venda, Long id) {
-
-        Venda vendaAntiga = findById(id);
-        vendaAntiga.setItens(venda.getItens());
-
-        for (ItemPedido item : vendaAntiga.getItens()) {
-            item.setVenda(vendaAntiga);
+            itensAtualizados.add(item);
         }
 
-        vendaAntiga.setDataVenda(vendaAntiga.getDataVenda());
-
-        return vendaRepository.save(vendaAntiga);
+        return itensAtualizados;
     }
 
 }

@@ -34,7 +34,8 @@ public class Venda {
     @OneToMany(fetch= FetchType.LAZY, cascade= CascadeType.ALL, mappedBy = "venda")
     private List<ItemPedido> itens;
 
-    public Venda(String nomeCliente, CanalVenda canalVenda, double valorTotalVenda, LocalDate dataVenda) {
+    public Venda(Long vendaId, String nomeCliente, CanalVenda canalVenda, double valorTotalVenda, LocalDate dataVenda) {
+        this.vendaId = vendaId;
         this.nomeCliente = nomeCliente;
         this.canalVenda = canalVenda;
         this.valorTotalVenda = valorTotalVenda;
@@ -47,5 +48,15 @@ public class Venda {
         this.valorTotalVenda = venda.getValorTotalVenda();
         this.dataVenda = venda.getDataVenda();
         this.itens = venda.getItens();
+    }
+
+    public void adicionarItem(ItemPedido item) {
+        itens.add(item);
+        item.setVenda(this);
+    }
+
+    public void removerItem(ItemPedido item) {
+        itens.remove(item);
+        item.setVenda(null);
     }
 }

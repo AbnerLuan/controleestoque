@@ -158,3 +158,11 @@ INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
 VALUES ('ANA LAURA', 2, 7.500, '2020-05-09');
 INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
 VALUES ('VITORIA', 3, 6.500, '2020-02-01');
+
+
+INSERT INTO ITEM_PEDIDO (VENDA_ID, nome_Produto, quantidade, valor_Unit, valor_Total_ITEM, PRODUTO_ID) VALUES
+(1, 'Item 1', 2, 10.99, 21.98, 5),
+(2, 'Item 2', 3, 7.99, 23.97, 8),
+(3, 'Item 3', 1, 5.99, 5.99, 55),
+(4, 'Item 4', 5, 3.99, 19.95, 99),
+(5, 'Item 5', 2, 8.99, 17.98, 113);
