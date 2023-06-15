@@ -21,9 +21,14 @@ public class ProdutoService {
     @Autowired
     public ProdutoService (ProdutoRepository produtoRepository) {this.produtoRepository = produtoRepository;}
 
-    public Page<Produto> findAll(Pageable pageable) {
+    public Page<Produto> findAllPageable(Pageable pageable) {
         logger.log(Level.INFO, "Lista de Produtos Carregada.");
         return produtoRepository.findAll(pageable);
+    }
+
+    public List<Produto> findAll() {
+        logger.log(Level.INFO, "Lista de Produtos Carregada.");
+        return produtoRepository.findAll();
     }
 
     public Produto findById(Long id) {

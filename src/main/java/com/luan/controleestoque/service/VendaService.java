@@ -10,12 +10,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 public class VendaService {
@@ -64,7 +62,7 @@ public class VendaService {
     public Venda update(Long id, Venda venda) {
         Venda vendaAntiga = findById(id);
         vendaAntiga.setVendaId(id);
-        vendaAntiga.setItens(prepararItens(venda.getItens(), vendaAntiga));
+        vendaAntiga.setItens(prepararItensUpdate(venda.getItens(), vendaAntiga));
         vendaAntiga.setDataVenda(venda.getDataVenda());
         logger.log(Level.INFO, "Venda atualizada com sucesso.");
         return vendaRepository.save(vendaAntiga);
@@ -84,59 +82,75 @@ public class VendaService {
         venda.setValorTotalVenda(total);
     }
 
-    private List<ItemPedido> prepararItens(List<ItemPedido> itensNovos, Venda vendaAntiga) {
-        List<ItemPedido> itensAtualizados = new ArrayList<>();
+    private List<ItemPedido> prepararItensUpdate(List<ItemPedido> itensNovos, Venda vendaAntiga) {
         List<ItemPedido> itensVelhos = vendaAntiga.getItens();
 
-        if (!itensNovos.isEmpty()) {
-            if (!itensVelhos.isEmpty()) {
-                List<ItemPedido> itensExcluir = new ArrayList<>(itensVelhos);
-                itensExcluir.removeIf(itemVelho -> itensNovos.stream().anyMatch(itemNovo -> itemNovo.getItemId() != null && itemNovo.getItemId().equals(itemVelho.getItemId())));
-            }
-
-            for (ItemPedido itemNovo : itensNovos) {
-                ItemPedido itemAntigo = itensVelhos.stream().filter(item -> item.getItemId() != null && item.getItemId().equals(itemNovo.getItemId())).findFirst().orElse(null);
-
-                if (itemAntigo != null) {
-                    if (!itemAntigo.equals(itemNovo)) {
-                        itemAntigo.setNomeProduto(itemNovo.getNomeProduto());
-                        itemAntigo.setQuantidade(itemNovo.getQuantidade());
-                        itemAntigo.setValorUnit(itemNovo.getValorUnit());
-
-                        itemAntigo.calcularValorTotalItem();
+        return itensNovos.stream()
+                .map(itemNovo -> {
+                    ItemPedido itemAntigo = encontrarItemAntigo(itemNovo, itensVelhos);
+                    if (itemAntigo != null) {
+                        atualizarItemAntigo(itemAntigo, itemNovo);
+                        return itemAntigo;
+                    } else {
+                        configurarNovoItemVenda(itemNovo);
+                        itemNovo.setVenda(vendaAntiga);
+                        itemNovo.calcularValorTotalItem();
+                        return itemNovo;
                     }
-                    itensAtualizados.add(itemAntigo);
-                } else {
-                    itemNovo.setVenda(vendaAntiga);
-                    itemNovo.calcularValorTotalItem();
-                    itensAtualizados.add(itemNovo);
-                }
-            }
-        }
-
-        return itensAtualizados;
+                })
+                .collect(Collectors.toList());
     }
 
+    private ItemPedido encontrarItemAntigo(ItemPedido itemNovo, List<ItemPedido> itensVelhos) {
+        return itensVelhos.stream()
+                .filter(item -> item.getItemId() != null && item.getItemId().equals(itemNovo.getItemId()))
+                .findFirst()
+                .orElse(null);
+    }
 
-    private List<ItemPedido> prepararItensSave(List<ItemPedido> itens, Venda vendaSalva) {
-        List<ItemPedido> itensAtualizados = new ArrayList<>();
+    private void atualizarItemAntigo(ItemPedido itemAntigo, ItemPedido itemNovo) {
+        if (!itemAntigo.equals(itemNovo)) {
+            itemAntigo.setNomeProduto(itemNovo.getNomeProduto());
+            itemAntigo.setQuantidade(itemNovo.getQuantidade());
+            itemAntigo.setValorUnit(itemNovo.getValorUnit());
+            itemAntigo.calcularValorTotalItem();
+        }
+    }
 
-        for (ItemPedido item : itens) {
-            item.setVenda(vendaSalva);
-
-            Long produtoId = produtoService.findIdByNomeProduto(item.getNomeProduto());
-
+    private void configurarNovoItemVenda(ItemPedido itemNovo) {
+        if (itemNovo.getProduto() != null && itemNovo.getProduto().getProdutoId() != null) {
+            // O itemNovo já possui o ID do produto, não é necessário fazer mais nada
+        } else {
+            Long produtoId = produtoService.findIdByNomeProduto(itemNovo.getNomeProduto());
             if (produtoId != null) {
                 Produto produto = new Produto();
                 produto.setProdutoId(produtoId);
-                item.setProduto(produto);
+                itemNovo.setProduto(produto);
+            } else {
+                throw new RuntimeException("O produto com nome " + itemNovo.getNomeProduto() + " não foi encontrado.");
             }
-
-            item.calcularValorTotalItem();
-            itensAtualizados.add(item);
         }
+    }
 
-        return itensAtualizados;
+    private List<ItemPedido> prepararItensSave(List<ItemPedido> itens, Venda vendaSalva) {
+
+        List<Produto> produtos = produtoService.findAll(); //Buscar todos os produtos
+
+        Map<String, Long> nomeParaProdutoIdMap = produtos.stream()  //Criar um mapa para mapear o nome do produto ao seu ID
+                .collect(Collectors.toMap(Produto::getNomeProduto, Produto::getProdutoId));
+
+        return itens.stream() // Processar cada item
+                .peek(item -> item.setVenda(vendaSalva)) //Configurar a venda para cada item
+                .peek(item -> {
+                    Long produtoId = nomeParaProdutoIdMap.get(item.getNomeProduto()); //Obter o ID do produto pelo nome
+                    if (produtoId != null) {
+                        Produto produto = new Produto();
+                        produto.setProdutoId(produtoId);
+                        item.setProduto(produto); //Configurar o produto no item
+                    }
+                    item.calcularValorTotalItem(); //Calcular o valor total do item
+                })
+                .collect(Collectors.toList()); //Coletar os itens atualizados em uma lista
     }
 
     private boolean verificarQuantidadeProdutos(List<ItemPedido> itens) {

@@ -30,7 +30,7 @@ public class ProdutoController {
             direction = Sort.Direction.DESC,
             page = 0,
             size = 10) Pageable pageable){
-        Page<Produto> produtosPage = produtoService.findAll(pageable);
+        Page<Produto> produtosPage = produtoService.findAllPageable(pageable);
         return ResponseEntity.ok().body(produtosPage);
     }
 
