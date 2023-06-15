@@ -14,7 +14,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -35,19 +34,16 @@ public class ProdutoController {
         return ResponseEntity.ok().body(produtosPage);
     }
 
-
     @GetMapping("/nomes")
     public List<String> findAllProdutos() {
-        return produtoService.findAllProdutos();
+        return produtoService.findAllNomeProdutos();
     }
-
 
     @GetMapping("/nome/{nomeProduto}")
     public ResponseEntity<List<Produto>> findByName(@PathVariable String nomeProduto) {
         List<Produto> produtos = produtoService.findByName(nomeProduto);
         return ResponseEntity.ok().body(produtos);
     }
-
 
     @GetMapping("/{id}")
     public ResponseEntity<Produto> findById(@PathVariable Long id) {

@@ -7,9 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @NoArgsConstructor
@@ -50,13 +48,4 @@ public class Venda {
         this.itens = venda.getItens();
     }
 
-    public void adicionarItem(ItemPedido item) {
-        itens.add(item);
-        item.setVenda(this);
-    }
-
-    public void removerItem(ItemPedido item) {
-        itens.remove(item);
-        item.setVenda(null);
-    }
 }

@@ -9,16 +9,20 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class ProdutoService {
 
+    private static final Logger logger = Logger.getLogger(ProdutoService.class.getName());
     private final ProdutoRepository produtoRepository;
 
     @Autowired
     public ProdutoService (ProdutoRepository produtoRepository) {this.produtoRepository = produtoRepository;}
 
     public Page<Produto> findAll(Pageable pageable) {
+        logger.log(Level.INFO, "Lista de Produtos Carregada.");
         return produtoRepository.findAll(pageable);
     }
 
@@ -30,9 +34,11 @@ public class ProdutoService {
 
     public void deleteById(Long id) {
         produtoRepository.deleteById(id);
+        logger.log(Level.INFO, "Produto deletado id: " + id);
     }
 
     public Produto save(Produto produto) {
+        logger.log(Level.INFO, "Novo produto Salvo: " + produto.getNomeProduto());
         return produtoRepository.save(produto);
     }
 
@@ -53,8 +59,8 @@ public class ProdutoService {
         return produtoRepository.save(produtoNovo);
     }
 
-    public List<String> findAllProdutos() {
-        return produtoRepository.findAllProdutos();
+    public List<String> findAllNomeProdutos() {
+        return produtoRepository.findAllNomeProdutos();
     }
 
 
@@ -64,5 +70,9 @@ public class ProdutoService {
 
     public List<Produto> findByName(String nomeProduto) {
         return produtoRepository.findByNomeProdutoIgnoreCaseContaining(nomeProduto);
+    }
+
+    public Produto findProdutoByName(String nomeProduto) {
+        return produtoRepository.findIdByNomeProduto(nomeProduto);
     }
 }

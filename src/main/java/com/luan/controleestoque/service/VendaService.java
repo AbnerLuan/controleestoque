@@ -12,22 +12,23 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class VendaService {
 
     private final VendaRepository vendaRepository;
     private final ProdutoService produtoService;
+    private static final Logger logger = Logger.getLogger(VendaService.class.getName());
 
-    private final ItemPedidoService itemPedidoService;
 
     @Autowired
-    public VendaService(VendaRepository vendaRepository, ProdutoService produtoService,
-                        ItemPedidoService itemPedidoService) {
+    public VendaService(VendaRepository vendaRepository, ProdutoService produtoService) {
         this.vendaRepository = vendaRepository;
         this.produtoService = produtoService;
-        this.itemPedidoService = itemPedidoService;
     }
 
     public Page<Venda> findAll(Pageable pageable) {
@@ -35,84 +36,82 @@ public class VendaService {
         for (Venda venda : vendas) {
             calcularValorTotalVenda(venda);
         }
+        logger.log(Level.INFO, "Lista de vendas carregada.");
         return vendas;
-    }
-
-    private void calcularValorTotalVenda(Venda venda) {
-        if (venda == null || venda.getItens() == null) {
-            return;
-        }
-
-        double total = 0.0;
-        for (ItemPedido item : venda.getItens()) {
-            if (item != null) {
-                total += item.getValorTotalItem();
-            }
-        }
-        venda.setValorTotalVenda(total);
     }
 
     public Venda findById(Long id) {
         Optional<Venda> vendaOptional = vendaRepository.findById(id);
-        return vendaOptional.orElseThrow(() -> new RuntimeException("CanalVenda nao encontrada"));
-    }
-
-    public void deleteById(Long id) {
-        vendaRepository.deleteById(id);
+        return vendaOptional.orElseThrow(() -> new RuntimeException("Venda nao encontrada"));
     }
 
     public Venda save(Venda venda) {
         Venda vendaSalva = new Venda(venda);
         vendaSalva.setDataVenda(LocalDate.now());
+
+        if (!verificarQuantidadeProdutos(venda.getItens())) {
+            throw new RuntimeException("Quantidade insuficiente de produtos no estoque.");
+        }
+
         List<ItemPedido> itensAtualizados = prepararItensSave(venda.getItens(), vendaSalva);
+        reduzirQuantidadeProdutosEstoque(itensAtualizados);
         vendaSalva.setItens(itensAtualizados);
         vendaRepository.save(vendaSalva);
+        logger.log(Level.INFO, "Venda Salva com sucesso.");
         return vendaSalva;
     }
 
-
     public Venda update(Long id, Venda venda) {
         Venda vendaAntiga = findById(id);
-        vendaAntiga = new Venda(venda);
         vendaAntiga.setVendaId(id);
-        List<ItemPedido> itensAtualizados = prepararItens(venda.getItens(), vendaAntiga);
-        vendaAntiga.setItens(itensAtualizados);
-        vendaAntiga.setDataVenda(vendaAntiga.getDataVenda());
+        vendaAntiga.setItens(prepararItens(venda.getItens(), vendaAntiga));
+        vendaAntiga.setDataVenda(venda.getDataVenda());
+        logger.log(Level.INFO, "Venda atualizada com sucesso.");
         return vendaRepository.save(vendaAntiga);
+    }
+    public void deleteById(Long id) {
+        vendaRepository.deleteById(id);
+    }
+
+    private void calcularValorTotalVenda(Venda venda) {
+        if (venda == null || venda.getItens().isEmpty()) {
+            return;
+        }
+        double total = venda.getItens().stream()
+                .filter(Objects::nonNull)
+                .mapToDouble(ItemPedido::getValorTotalItem)
+                .sum();
+        venda.setValorTotalVenda(total);
     }
 
     private List<ItemPedido> prepararItens(List<ItemPedido> itensNovos, Venda vendaAntiga) {
         List<ItemPedido> itensAtualizados = new ArrayList<>();
+        List<ItemPedido> itensVelhos = vendaAntiga.getItens();
 
-        for (ItemPedido itemNovo : itensNovos) {
-            ItemPedido itemAntigo = null;
-
-            for (ItemPedido item : vendaAntiga.getItens()) {
-                if (item.getItemId() != null && item.getItemId().equals(itemNovo.getItemId())) {
-                    itemAntigo = item;
-                    break;
-                }
+        if (!itensNovos.isEmpty()) {
+            if (!itensVelhos.isEmpty()) {
+                List<ItemPedido> itensExcluir = new ArrayList<>(itensVelhos);
+                itensExcluir.removeIf(itemVelho -> itensNovos.stream().anyMatch(itemNovo -> itemNovo.getItemId() != null && itemNovo.getItemId().equals(itemVelho.getItemId())));
             }
 
-            if (itemAntigo != null) {
-                if (!itemAntigo.equals(itemNovo)) {
-                    itemAntigo.setNomeProduto(itemNovo.getNomeProduto());
-                    itemAntigo.setQuantidade(itemNovo.getQuantidade());
-                    itemAntigo.setValorUnit(itemNovo.getValorUnit());
-                    itemAntigo.calcularValorTotalItem();
-                }
-                itensAtualizados.add(itemAntigo);
-            } else {
-                itemNovo.setVenda(vendaAntiga);
-                itemNovo.calcularValorTotalItem();
-                itensAtualizados.add(itemNovo);
-            }
-        }
+            for (ItemPedido itemNovo : itensNovos) {
+                ItemPedido itemAntigo = itensVelhos.stream().filter(item -> item.getItemId() != null && item.getItemId().equals(itemNovo.getItemId())).findFirst().orElse(null);
 
-        List<ItemPedido> itensAntigos = new ArrayList<>(vendaAntiga.getItens());
-        itensAntigos.removeAll(itensAtualizados);
-        for (ItemPedido itemAntigo : itensAntigos) {
-            itemPedidoService.delete(itemAntigo);
+                if (itemAntigo != null) {
+                    if (!itemAntigo.equals(itemNovo)) {
+                        itemAntigo.setNomeProduto(itemNovo.getNomeProduto());
+                        itemAntigo.setQuantidade(itemNovo.getQuantidade());
+                        itemAntigo.setValorUnit(itemNovo.getValorUnit());
+
+                        itemAntigo.calcularValorTotalItem();
+                    }
+                    itensAtualizados.add(itemAntigo);
+                } else {
+                    itemNovo.setVenda(vendaAntiga);
+                    itemNovo.calcularValorTotalItem();
+                    itensAtualizados.add(itemNovo);
+                }
+            }
         }
 
         return itensAtualizados;
@@ -138,6 +137,25 @@ public class VendaService {
         }
 
         return itensAtualizados;
+    }
+
+    private boolean verificarQuantidadeProdutos(List<ItemPedido> itens) {
+        for (ItemPedido item : itens) {
+            Produto produto = produtoService.findProdutoByName(item.getNomeProduto());
+            if (produto != null && item.getQuantidade() > produto.getQuantidadeEstoque()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void reduzirQuantidadeProdutosEstoque(List<ItemPedido> itens) {
+        for (ItemPedido item : itens) {
+            Produto produto = produtoService.findProdutoByName(item.getNomeProduto());
+            int novaQuantidade = produto.getQuantidadeEstoque() - item.getQuantidade();
+            produto.setQuantidadeEstoque(novaQuantidade);
+            produtoService.save(produto);
+        }
     }
 
 }
