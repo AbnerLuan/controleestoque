@@ -1,5 +1,7 @@
 package com.luan.controleestoque.service;
 
+import com.luan.controleestoque.dto.ProdutoDTO;
+import com.luan.controleestoque.dto.ProdutoMapper;
 import com.luan.controleestoque.model.Produto;
 import com.luan.controleestoque.repository.ProdutoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,24 +9,31 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Service
 public class ProdutoService {
 
     private static final Logger logger = Logger.getLogger(ProdutoService.class.getName());
     private final ProdutoRepository produtoRepository;
+    private final ProdutoMapper produtoMapper;
 
     @Autowired
-    public ProdutoService (ProdutoRepository produtoRepository) {this.produtoRepository = produtoRepository;}
-
-    public Page<Produto> findAll(Pageable pageable) {
-        logger.log(Level.INFO, "Lista de Produtos Carregada.");
-        return produtoRepository.findAll(pageable);
+    public ProdutoService (ProdutoRepository produtoRepository, ProdutoMapper produtoMapper) {
+        this.produtoRepository = produtoRepository;
+        this.produtoMapper = produtoMapper;
     }
+
+//    public Page<ProdutoDTO> findAll(Pageable pageable) {
+//        logger.log(Level.INFO, "Lista de Produtos Carregada.");
+//        return produtoRepository.findAll(pageable).stream().map(produtoMapper::toDTO)
+//               .collect(Collectors.toList());
+//    }
 
     public Produto findById(Long id) {
         Optional<Produto> produtoOptional = produtoRepository.findById(id);
