@@ -44,6 +44,12 @@ public class ItemPedido {
         calcularValorTotalItem();
     }
 
+    public ItemPedido(ItemPedido item) {
+        this.itemId = item.getItemId();
+        this.nomeProduto = item.getNomeProduto();
+        this.quantidade = item.getQuantidade();
+    }
+
     public void calcularValorTotalItem() {
         this.valorTotalItem = quantidade * valorUnit;
     }
