@@ -1,5 +1,5 @@
 INSERT INTO produto (blog, cadastro_ml, cadastro_shoppe, cadastro_site, ean, marca_produto, nome_produto,
-                     quantidade_estoque, tipo_produto, valor_total, valor_unitario)
+                     quantidade_estoque, tipo_produto, valor_unitario, valor_total)
 VALUES (true, true, true, true, '718037882383', 'WD', 'SSD M2 WD GREEN 240GB', -1, 'SSD', 162.71, -162.71),
        (true, true, true, true, '718037858821', 'WD', 'SSD M2 WD GREEN 120GB', 10, 'SSD', 172, 0),
        (true, true, true, true, '555', 'RAZER', 'BASILISK CHROMA', 0, 'MOUSE', 392.7, 0),
@@ -147,27 +147,17 @@ VALUES (true, true, true, true, '718037882383', 'WD', 'SSD M2 WD GREEN 240GB', -
        (true, true, true, true, '555', 'THERMALTAKE', 'FONTE TT SMART 650W WHITE', 1, 'FONTE', 436.5, 436.5),
        (true, true, true, true, '555', 'THERMALTAKE', 'FONTE TT SMART 500W WHITE', 1, 'FONTE', 306.24, 306.24);
 
-INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES ('JOSMAR', 1, 5.200, '2020-05-11');
-INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES ('JOSE', 2, 5.535, '2020-06-12');
-INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES ('MARIA', 3, 55.555, '2020-02-17');
-INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES ('FLAVIA', 4, 52.500, '2020-05-21');
-INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES ('JESSICA', 2, 3.500, '2020-08-20');
-INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES ('CAMILA', 4, 4.000, '2020-09-12');
-INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES ('CAROL', 0, 4.500, '2020-08-15');
-INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES ('ANNA', 1, 5.000, '2020-12-17');
-INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES ('ANA LAURA', 2, 7.500, '2020-05-09');
-INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda)
-VALUES ('VITORIA', 3, 6.500, '2020-02-01');
-
+INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda, valor_frete, valor_tarifa, lucro_venda)
+VALUES ('JOSMAR', 1, 5.200, '2020-05-11', 10.0, 20.0, 0),
+       ('JOSE', 2, 5.535, '2020-06-12', 11.0, 21.0, 0),
+       ('MARIA', 3, 55.555, '2020-02-17', 12.0, 22.0, 0),
+       ('FLAVIA', 4, 52.500, '2020-05-21', 13.0, 23.0, 0),
+       ('JESSICA', 2, 3.500, '2020-08-20', 14.0, 24.0, 0),
+       ('CAMILA', 4, 4.000, '2020-09-12', 15.0, 25.0, 0),
+       ('CAROL', 0, 4.500, '2020-08-15', 16.0, 26.0, 0),
+       ('ANNA', 1, 5.000, '2020-12-17', 17.0, 27.0, 0),
+       ('ANA LAURA', 2, 7.500, '2020-05-09', 18.0, 28.0, 0),
+       ('VITORIA', 3, 6.500, '2020-02-01', 19.0, 29.0, 0);
 
 INSERT INTO ITEM_PEDIDO (VENDA_ID, nome_Produto, quantidade, valor_Unit, valor_Total_ITEM, PRODUTO_ID)
 VALUES (1, 'SSD M2 WD GREEN 240GB', 2, 10.99, 21.98, 1),
@@ -190,3 +180,45 @@ VALUES (1, 'SSD M2 WD GREEN 240GB', 2, 10.99, 21.98, 1),
        (9, 'CHAVEIRO MARTELO THOR NOVO', 1, 6.49, 6.49, 18),
        (10, 'CHAVEIRO CANHAO JINX', 1, 11.99, 11.99, 19),
        (10, 'CHAVEIRO PISTOLA LUCIAN', 4, 8.99, 35.96, 20);
+
+INSERT INTO GASTO (DESCRICAO, VALOR, DATA_REGISTRO)
+VALUES ('MENSALIDADE LOJA JUNHO', 400.00, '2023-06-20'),
+       ('MENSALIDADE BLING MES JUNHO', 50.00, '2023-06-20'),
+       ('CARTUCHO IMPRESSORA', 40.00, '2023-06-10'),
+       ('MENSALIDADE MEI', 70.00, '2023-06-15'),
+       ('COMPRA DE EMBALAGENS', 150.00, '2023-06-05'),
+       ('COMPRA DE DUREX', 30.00, '2023-06-09'),
+       ('ANUNCIOS NO GOOGLE', 2000.00, '2023-06-10'),
+       ('ANUNCIOS NO FACEBOOK', 100.00, '2023-06-20'),
+       ('ANUNCIOS NO INSTAGRAM', 1000.00, '2023-06-20'),
+       ('PAGAMENTO INFLUENCER', 900.00, '2023-06-20'),
+       ('COMPRA PAPEL SULFITE', 60.00, '2023-06-20');
+
+INSERT INTO FIADO (CELULAR_CLIENTE, DATA_REGISTRO, NOME_CLIENTE, OBSERVACOES, VALOR_PENDENTE, VALOR_TOTAL)
+VALUES ('1199999999', '2023-06-10', 'ISMAYLI', 'OBSERVACAO SOBRE A COMPRA DO CLIENTE', 5000.00, 15000.00),
+       ('1199999919', '2023-06-10', 'ROSBERVAL', 'OBSERVACAO SOBRE A COMPRA DO CLIENTE', 5000.00, 15000.00),
+       ('1199999909', '2023-06-10', 'JERCIRCLEIDE', 'OBSERVACAO SOBRE A COMPRA DO CLIENTE', 5000.00, 15000.00),
+       ('1199999990', '2023-06-10', 'CREUSA', 'OBSERVACAO SOBRE A COMPRA DO CLIENTE', 5000.00, 15000.00),
+       ('1199999991', '2023-06-10', 'VALDEMIRA', 'OBSERVACAO SOBRE A COMPRA DO CLIENTE', 5000.00, 15000.00),
+       ('1199999992', '2023-06-10', 'DIUMILLTON', 'OBSERVACAO SOBRE A COMPRA DO CLIENTE', 5000.00, 15000.00),
+       ('1199999993', '2023-06-10', 'CLAUDOBERTO', 'OBSERVACAO SOBRE A COMPRA DO CLIENTE', 5000.00, 15000.00),
+       ('1199999994', '2023-06-10', 'VALDISCLEIA', 'OBSERVACAO SOBRE A COMPRA DO CLIENTE', 5000.00, 15000.00),
+       ('1199999995', '2023-06-10', 'CLAUDISNEIA', 'OBSERVACAO SOBRE A COMPRA DO CLIENTE', 5000.00, 15000.00),
+       ('1199999996', '2023-06-10', 'VALDOMIRO', 'OBSERVACAO SOBRE A COMPRA DO CLIENTE', 5000.00, 15000.00),
+       ('1199999997', '2023-06-10', 'MARIANETE', 'OBSERVACAO SOBRE A COMPRA DO CLIENTE', 5000.00, 15000.00),
+       ('1199999998', '2023-06-10', 'LUAN', 'OBSERVACAO SOBRE A COMPRA DO CLIENTE', 5000.00, 15000.00);
+
+INSERT INTO PAGAMENTO (DATA_DO_PAGAMENTO, VALOR_PAGAMENTO, FIADO_ID)
+VALUES ('2023-04-10', 500.00, 1),
+       ('2023-05-10', 500.00, 1),
+       ('2023-06-10', 500.00, 2),
+       ('2023-04-10', 500.00, 3),
+       ('2023-05-10', 500.00, 4),
+       ('2023-06-10', 500.00, 5),
+       ('2023-04-10', 500.00, 6),
+       ('2023-05-10', 500.00, 7),
+       ('2023-06-10', 500.00, 8),
+       ('2023-06-10', 500.00, 9),
+       ('2023-04-10', 500.00, 10),
+       ('2023-05-10', 500.00, 11),
+       ('2023-06-10', 500.00, 12);

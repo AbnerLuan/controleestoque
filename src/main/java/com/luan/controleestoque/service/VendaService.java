@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -20,20 +21,19 @@ public class VendaService {
 
     private final VendaRepository vendaRepository;
     private final ProdutoService produtoService;
+
+    private final ItemPedidoService itemPedidoService;
     private static final Logger logger = Logger.getLogger(VendaService.class.getName());
 
-
     @Autowired
-    public VendaService(VendaRepository vendaRepository, ProdutoService produtoService) {
+    public VendaService(VendaRepository vendaRepository, ProdutoService produtoService, ItemPedidoService itemPedidoService) {
         this.vendaRepository = vendaRepository;
         this.produtoService = produtoService;
+        this.itemPedidoService = itemPedidoService;
     }
 
     public Page<Venda> findAll(Pageable pageable) {
         Page<Venda> vendas = vendaRepository.findAll(pageable);
-        for (Venda venda : vendas) {
-            calcularValorTotalVenda(venda);
-        }
         logger.log(Level.INFO, "Lista de vendas carregada.");
         return vendas;
     }
@@ -43,15 +43,33 @@ public class VendaService {
         return vendaOptional.orElseThrow(() -> new RuntimeException("Venda nao encontrada"));
     }
 
+    public void deleteById(Long id) {
+        Optional<Venda> optionalVenda = vendaRepository.findById(id);
+        if (optionalVenda.isPresent()) {
+            Venda venda = optionalVenda.get();
+            List<ItemPedido> itensPedido = venda.getItens();
+            for (ItemPedido itemPedido : itensPedido) {
+                itemPedidoService.deleteById(itemPedido.getItemId());
+            }
+            vendaRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Venda não encontrada");
+        }
+    }
+
+
     public Venda save(Venda venda) {
         Venda vendaSalva = new Venda(venda);
         vendaSalva.setDataVenda(LocalDate.now());
-
-        if (!verificarQuantidadeProdutos(venda.getItens())) {
+        Map<String, Produto> nomeParaProdutoMap = buscarProdutosPorNome(venda.getItens());
+        if (verificarQuantidadeProdutos(venda.getItens(), nomeParaProdutoMap)) {
             throw new RuntimeException("Quantidade insuficiente de produtos no estoque.");
         }
-
-        List<ItemPedido> itensAtualizados = prepararItensSave(venda.getItens(), vendaSalva);
+        List<ItemPedido> itensAtualizados = prepararItensSave(venda.getItens(), vendaSalva, nomeParaProdutoMap);
+        double valorTotalVenda = calcularValorTotalVenda(itensAtualizados);
+        vendaSalva.setValorTotalVenda(valorTotalVenda);
+        double lucro = calcularLucroVenda(vendaSalva, itensAtualizados);
+        vendaSalva.setLucroVenda(lucro);
         reduzirQuantidadeProdutosEstoque(itensAtualizados);
         vendaSalva.setItens(itensAtualizados);
         vendaRepository.save(vendaSalva);
@@ -59,119 +77,154 @@ public class VendaService {
         return vendaSalva;
     }
 
-    public Venda update(Long id, Venda venda) {
-        Venda vendaAntiga = findById(id);
-        vendaAntiga.setVendaId(id);
-        vendaAntiga.setItens(prepararItensUpdate(venda.getItens(), vendaAntiga));
-        vendaAntiga.setDataVenda(venda.getDataVenda());
-        logger.log(Level.INFO, "Venda atualizada com sucesso.");
-        return vendaRepository.save(vendaAntiga);
-    }
-    public void deleteById(Long id) {
-        vendaRepository.deleteById(id);
+    private int calcularNovaQuantidade(int quantidadeEstoque, int quantidadeVendida) {
+        return quantidadeEstoque - quantidadeVendida;
     }
 
-    private void calcularValorTotalVenda(Venda venda) {
-        if (venda == null || venda.getItens().isEmpty()) {
-            return;
-        }
-        double total = venda.getItens().stream()
-                .filter(Objects::nonNull)
-                .mapToDouble(ItemPedido::getValorTotalItem)
-                .sum();
-        venda.setValorTotalVenda(total);
-    }
-
-    private List<ItemPedido> prepararItensUpdate(List<ItemPedido> itensNovos, Venda vendaAntiga) {
-        List<ItemPedido> itensVelhos = vendaAntiga.getItens();
-
-        return itensNovos.stream()
-                .map(itemNovo -> {
-                    ItemPedido itemAntigo = encontrarItemAntigo(itemNovo, itensVelhos);
-                    if (itemAntigo != null) {
-                        atualizarItemAntigo(itemAntigo, itemNovo);
-                        return itemAntigo;
-                    } else {
-                        configurarNovoItemVenda(itemNovo);
-                        itemNovo.setVenda(vendaAntiga);
-                        itemNovo.calcularValorTotalItem();
-                        return itemNovo;
-                    }
+    private List<ItemPedido> prepararItensSave(List<ItemPedido> itens, Venda vendaSalva, Map<String, Produto> nomeParaProdutoMap) {
+        return itens.stream()
+                .peek(item -> item.setVenda(vendaSalva))
+                .peek(item -> {
+                    Optional<Produto> optionalProduto = Optional.ofNullable(nomeParaProdutoMap.get(item.getNomeProduto()));
+                    optionalProduto.ifPresent(item::setProduto);
+                    item.calcularValorTotalItem();
                 })
                 .collect(Collectors.toList());
     }
 
-    private ItemPedido encontrarItemAntigo(ItemPedido itemNovo, List<ItemPedido> itensVelhos) {
-        return itensVelhos.stream()
-                .filter(item -> item.getItemId() != null && item.getItemId().equals(itemNovo.getItemId()))
-                .findFirst()
-                .orElse(null);
+    private double calcularLucroVenda(Venda venda, List<ItemPedido> itens) {
+        double custoTotalDosProdutos = calcularCustoTotalDosProdutos(itens);
+        return venda.getValorTotalVenda() - venda.getValorFrete() - venda.getValorTarifa() - custoTotalDosProdutos;
     }
 
-    private void atualizarItemAntigo(ItemPedido itemAntigo, ItemPedido itemNovo) {
-        if (!itemAntigo.equals(itemNovo)) {
-            itemAntigo.setNomeProduto(itemNovo.getNomeProduto());
-            itemAntigo.setQuantidade(itemNovo.getQuantidade());
-            itemAntigo.setValorUnit(itemNovo.getValorUnit());
-            itemAntigo.calcularValorTotalItem();
-        }
-    }
-
-    private void configurarNovoItemVenda(ItemPedido itemNovo) {
-        if (itemNovo.getProduto() != null && itemNovo.getProduto().getProdutoId() != null) {
-            // O itemNovo já possui o ID do produto, não é necessário fazer mais nada
-        } else {
-            Long produtoId = produtoService.findIdByNomeProduto(itemNovo.getNomeProduto());
-            if (produtoId != null) {
-                Produto produto = new Produto();
-                produto.setProdutoId(produtoId);
-                itemNovo.setProduto(produto);
-            } else {
-                throw new RuntimeException("O produto com nome " + itemNovo.getNomeProduto() + " não foi encontrado.");
-            }
-        }
-    }
-
-    private List<ItemPedido> prepararItensSave(List<ItemPedido> itens, Venda vendaSalva) {
-
-        List<Produto> produtos = produtoService.findAll(); //Buscar todos os produtos
-
-        Map<String, Long> nomeParaProdutoIdMap = produtos.stream()  //Criar um mapa para mapear o nome do produto ao seu ID
-                .collect(Collectors.toMap(Produto::getNomeProduto, Produto::getProdutoId));
-
-        return itens.stream() // Processar cada item
-                .peek(item -> item.setVenda(vendaSalva)) //Configurar a venda para cada item
-                .peek(item -> {
-                    Long produtoId = nomeParaProdutoIdMap.get(item.getNomeProduto()); //Obter o ID do produto pelo nome
-                    if (produtoId != null) {
-                        Produto produto = new Produto();
-                        produto.setProdutoId(produtoId);
-                        item.setProduto(produto); //Configurar o produto no item
-                    }
-                    item.calcularValorTotalItem(); //Calcular o valor total do item
+    private double calcularCustoTotalDosProdutos(List<ItemPedido> itens) {
+        return itens.stream()
+                .mapToDouble(item -> {
+                    Optional<Produto> optionalProduto = Optional.ofNullable(item.getProduto());
+                    return optionalProduto.map(produto -> produto.getValorUnitario() * item.getQuantidade()).orElse(0.0);
                 })
-                .collect(Collectors.toList()); //Coletar os itens atualizados em uma lista
+                .sum();
     }
 
-    private boolean verificarQuantidadeProdutos(List<ItemPedido> itens) {
+    private double calcularValorTotalVenda(List<ItemPedido> itens) {
+        return itens.stream()
+                .mapToDouble(ItemPedido::getValorTotalItem)
+                .sum();
+    }
+
+    private Map<String, Produto> buscarProdutosPorNome(List<ItemPedido> itens) {
+        Set<String> nomesProdutos = itens.stream()
+                .map(ItemPedido::getNomeProduto)
+                .collect(Collectors.toSet());
+
+        List<Produto> produtos = produtoService.findByNomeProdutoIn(nomesProdutos);
+
+        return produtos.stream()
+                .collect(Collectors.toMap(Produto::getNomeProduto, Function.identity()));
+    }
+
+    private boolean verificarQuantidadeProdutos(List<ItemPedido> itens, Map<String, Produto> nomeParaProdutoMap) {
         for (ItemPedido item : itens) {
-            Produto produto = produtoService.findProdutoByName(item.getNomeProduto());
-            if (produto != null && item.getQuantidade() > produto.getQuantidadeEstoque()) {
-                return false;
+            Optional<Produto> optionalProduto = Optional.ofNullable(nomeParaProdutoMap.get(item.getNomeProduto()));
+            if (optionalProduto.isPresent() && item.getQuantidade() > optionalProduto.get().getQuantidadeEstoque()) {
+                return true;
             }
         }
-        return true;
+        return false;
+    }
+
+    private void atualizarQuantidadeProdutoEstoque(Produto produto, int novaQuantidade) {
+        produto.setQuantidadeEstoque(novaQuantidade);
+        produtoService.save(produto);
     }
 
     private void reduzirQuantidadeProdutosEstoque(List<ItemPedido> itens) {
-        for (ItemPedido item : itens) {
-            Produto produto = produtoService.findProdutoByName(item.getNomeProduto());
-            int novaQuantidade = produto.getQuantidadeEstoque() - item.getQuantidade();
-            produto.setQuantidadeEstoque(novaQuantidade);
-            produtoService.save(produto);
+        itens.forEach(item -> {
+            Produto produto = item.getProduto();
+            int novaQuantidade = calcularNovaQuantidade(produto.getQuantidadeEstoque(), item.getQuantidade());
+            atualizarQuantidadeProdutoEstoque(produto, novaQuantidade);
+        });
+    }
+
+    public Venda update(Long id, Venda venda) {
+        Venda vendaAntiga = findById(id);
+        Venda vendaAtualizada = new Venda(venda);
+        vendaAtualizada.setVendaId(id);
+        prepararItensUpdate(vendaAntiga, vendaAtualizada, vendaAtualizada);
+        vendaAtualizada.setValorTotalVenda(calcularValorTotalVenda(vendaAtualizada.getItens()));
+        vendaAtualizada.setLucroVenda(calcularLucroVenda(vendaAtualizada, vendaAtualizada.getItens()));
+        logger.log(Level.INFO, "Venda atualizada com sucesso.");
+        return vendaRepository.save(vendaAtualizada);
+    }
+
+    private void prepararItensUpdate(Venda vendaAntiga, Venda vendaNova, Venda vendaAtualizada) {
+        List<ItemPedido> listaItensAtualizados = vendaNova.getItens();
+        List<ItemPedido> listaItensAntigos = vendaAntiga.getItens();
+
+        Map<String, Produto> nomeParaProdutoMap = buscarProdutosPorNome(vendaNova.getItens());
+        if(!calcularDiferencaDeQuantidadeProdutoVerificaEAtualiza(listaItensAntigos, listaItensAtualizados, nomeParaProdutoMap)){
+            throw new RuntimeException("Quantidade insuficiente de produtos no estoque.");
+        }
+        for (ItemPedido itemAtualizado : listaItensAtualizados) {
+            Produto produto = nomeParaProdutoMap.get(itemAtualizado.getNomeProduto());
+            if (produto != null) {
+                itemAtualizado.setProduto(produto);
+                itemAtualizado.setVenda(vendaAtualizada);
+                itemAtualizado.calcularValorTotalItem();
+            }
+        }
+
+    }
+
+    private boolean calcularDiferencaDeQuantidadeProdutoVerificaEAtualiza(List<ItemPedido> listaItensAntigos,
+                                                                          List<ItemPedido> listaItensAtualizados,
+                                                                          Map<String, Produto> nomeParaProdutoMap) {
+        List<ItemPedido> listaParaVerificarQuantidadeEAtualizar = new ArrayList<>();
+
+        for (ItemPedido itemVendaNova : listaItensAtualizados) {
+            if (itemVendaNova.getItemId() == null) {
+
+                listaParaVerificarQuantidadeEAtualizar.add(new ItemPedido(itemVendaNova));
+            } else {
+                for (ItemPedido itemVendaAntiga : listaItensAntigos) {
+                    if (itemVendaNova.getItemId().equals(itemVendaAntiga.getItemId()) &&
+                            itemVendaNova.getQuantidade() != itemVendaAntiga.getQuantidade()) {
+
+                        int quantidadeAtualizada = itemVendaNova.getQuantidade() - itemVendaAntiga.getQuantidade();
+                        ItemPedido itemCopia = new ItemPedido(itemVendaNova);
+                        itemCopia.setQuantidade(quantidadeAtualizada);
+                        listaParaVerificarQuantidadeEAtualizar.add(itemCopia);
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (verificarQuantidadeProdutos(listaParaVerificarQuantidadeEAtualizar, nomeParaProdutoMap)) {
+            throw new RuntimeException("Quantidade insuficiente de produtos no estoque.");
+        } else {
+            reduzirQuantidadeProdutosEstoqueUpdate(listaParaVerificarQuantidadeEAtualizar, nomeParaProdutoMap);
+            return true;
         }
     }
 
+    private void reduzirQuantidadeProdutosEstoqueUpdate(List<ItemPedido> listaParaVerificarQuantidadeEAtualizar,
+                                                        Map<String, Produto> nomeParaProdutoMap) {
+        for (ItemPedido item : listaParaVerificarQuantidadeEAtualizar) {
+            Produto produto = nomeParaProdutoMap.get(item.getNomeProduto());
+            if (produto != null) {
+                int novaQuantidade = calcularNovaQuantidade(produto.getQuantidadeEstoque(), item.getQuantidade());
+                atualizarQuantidadeProdutoEstoque(produto, novaQuantidade);
+            }
+        }
+    }
+
+
+
 }
+
+
+
+
 
 
