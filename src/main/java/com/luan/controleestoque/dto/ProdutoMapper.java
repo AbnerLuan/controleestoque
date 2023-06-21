@@ -12,6 +12,4 @@ public class ProdutoMapper {
                 produto.getValorTotal(), produto.getEan(), produto.isCadastroSite(), produto.isCadastroShoppe(),
                 produto.isBlog(), produto.getItens());
     }
-
-
 }

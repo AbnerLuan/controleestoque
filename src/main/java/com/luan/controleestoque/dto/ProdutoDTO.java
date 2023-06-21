@@ -19,6 +19,4 @@ public record ProdutoDTO(Long produtoId,
 
                          @JsonIgnore boolean blog, List<ItemPedido> itens) {
 
-
-
 }
