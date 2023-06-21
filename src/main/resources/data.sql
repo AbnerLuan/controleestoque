@@ -1,7 +1,7 @@
 INSERT INTO produto (blog, cadastro_ml, cadastro_shoppe, cadastro_site, ean, marca_produto, nome_produto,
                      quantidade_estoque, tipo_produto, valor_total, valor_unitario)
 VALUES (true, true, true, true, '718037882383', 'WD', 'SSD M2 WD GREEN 240GB', -1, 'SSD', 162.71, -162.71),
-       (true, true, true, true, '718037858821', 'WD', 'SSD M2 WD GREEN 120GB', 0, 'SSD', 172, 0),
+       (true, true, true, true, '718037858821', 'WD', 'SSD M2 WD GREEN 120GB', 10, 'SSD', 172, 0),
        (true, true, true, true, '555', 'RAZER', 'BASILISK CHROMA', 0, 'MOUSE', 392.7, 0),
        (true, true, true, true, '8886419317494', 'RAZER', 'GOLIATHUS MOBILE', 0, 'MOUSEPAD', 46, 0),
        (true, true, true, true, '8886419317791', 'RAZER', 'GOLIATHUS CONTROL MEDIO', 0, 'MOUSEPAD', 114, 0),

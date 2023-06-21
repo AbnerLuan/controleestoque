@@ -1,6 +1,5 @@
 package com.luan.controleestoque.controller;
 
-import com.luan.controleestoque.dto.ProdutoDTO;
 import com.luan.controleestoque.model.Produto;
 import com.luan.controleestoque.service.ProdutoService;
 import jakarta.validation.Valid;
@@ -26,6 +25,7 @@ public class ProdutoController {
     @Autowired
     public ProdutoController(ProdutoService produtoService) {this.produtoService = produtoService;}
 
+
 //    @GetMapping
 //    public ResponseEntity<Page<ProdutoDTO>> findAll(@PageableDefault(sort = "produtoId",
 //            direction = Sort.Direction.DESC,
@@ -34,6 +34,16 @@ public class ProdutoController {
 //        Page<ProdutoDTO> produtosPage = produtoService.findAll(pageable);
 //        return ResponseEntity.ok().body(produtosPage);
 //    }
+
+    @GetMapping
+    public ResponseEntity<Page<Produto>> findAll(@PageableDefault(sort = "produtoId",
+            direction = Sort.Direction.DESC,
+            page = 0,
+            size = 10) Pageable pageable){
+        Page<Produto> produtosPage = produtoService.findAllPageable(pageable);
+        return ResponseEntity.ok().body(produtosPage);
+    }
+
 
     @GetMapping("/nomes")
     public List<String> findAllProdutos() {
