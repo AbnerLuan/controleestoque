@@ -1,6 +1,7 @@
 package com.luan.controleestoque.controller;
 
 import com.luan.controleestoque.model.Fiado;
+import com.luan.controleestoque.model.Produto;
 import com.luan.controleestoque.service.FiadoService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,11 @@ public class FiadoController {
         Fiado newObj = fiadoService.save(fiado);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(newObj.getFiadoId()).toUri();
         return ResponseEntity.created(uri).build();
+    }
+
+    @PutMapping(path = "/{id}")
+    public ResponseEntity<Fiado> update(@RequestBody Fiado fiado, @PathVariable Long id){
+        return ResponseEntity.ok().body(fiadoService.update(fiado, id));
     }
 
     @DeleteMapping("/{id}")

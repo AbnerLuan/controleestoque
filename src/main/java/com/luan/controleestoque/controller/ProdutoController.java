@@ -31,9 +31,6 @@ public class ProdutoController {
         this.produtoService = produtoService;
     }
 
-
-
-
     @GetMapping
     public ResponseEntity<Page<ProdutoDTO>> findAll(@PageableDefault(sort = "produtoId",
             direction = Sort.Direction.DESC,
@@ -48,8 +45,8 @@ public class ProdutoController {
     public List<String> findAllProdutos() {return produtoService.findAllNomeProdutos();}
 
     @GetMapping("/nome/{nomeProduto}")
-    public ResponseEntity<List<Produto>> findByName(@PathVariable String nomeProduto) {
-        List<Produto> produtos = produtoService.findByNameIgnoreCase(nomeProduto);
+    public ResponseEntity<List<ProdutoDTO>> findByName(@PathVariable String nomeProduto) {
+        List<ProdutoDTO> produtos = produtoService.findByNameIgnoreCase(nomeProduto);
         return ResponseEntity.ok().body(produtos);
     }
 
@@ -60,11 +57,11 @@ public class ProdutoController {
     }
 
     @PostMapping
-    public ResponseEntity<Produto> create(@RequestBody @Valid Produto produto){
-        Produto newObj = produtoService.save(produto);
+    public ResponseEntity<ProdutoDTO> create(@RequestBody @Valid Produto produto){
+        ProdutoDTO newObj = produtoService.save(produto);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
                 .buildAndExpand(newObj.getProdutoId()).toUri();
-        return ResponseEntity.created(uri).build();
+        return ResponseEntity.created(uri).body(newObj);
     }
 
     @PutMapping(path = "/{id}")

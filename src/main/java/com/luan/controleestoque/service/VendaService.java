@@ -1,6 +1,7 @@
 package com.luan.controleestoque.service;
 
 import com.luan.controleestoque.model.ItemPedido;
+import com.luan.controleestoque.model.MesValor;
 import com.luan.controleestoque.model.Produto;
 import com.luan.controleestoque.model.Venda;
 import com.luan.controleestoque.repository.VendaRepository;
@@ -117,7 +118,7 @@ public class VendaService {
                 .map(ItemPedido::getNomeProduto)
                 .collect(Collectors.toSet());
 
-        List<Produto> produtos = produtoService.findByNomeProdutoLista(nomesProdutos);
+        List<Produto> produtos = produtoService.findByNomeProdutoIn(nomesProdutos);
 
         return produtos.stream()
                 .collect(Collectors.toMap(Produto::getNomeProduto, Function.identity()));
@@ -220,6 +221,41 @@ public class VendaService {
     }
 
 
+    public double obterValorTotalFaturamentoAnual() {
+        return vendaRepository.calculaValorTotalFaturamentoAnual();
+    }
+
+    public double obterValorFaturamentoMesAtual() {
+        return vendaRepository.calculaValorTotalFaturamentoMesAtual();
+    }
+
+    public double obterValorTotalLucroAnual() {
+        return vendaRepository.calculaValorTotalLucroAnual();
+    }
+
+    public double obterValorLucroMesAtual() {
+        return vendaRepository.calculaValorTotalLucroMesAtual();
+    }
+
+    public List<Double> getValoresFaturamentoMensalFromDatabase() {
+        List<MesValor> mesValores = vendaRepository.getValoresFaturamentoMensal();
+        List<Double> valoresFaturamentoMensal = new ArrayList<>(Collections.nCopies(12, 0.0));
+        for (MesValor mesValor : mesValores) {
+            int monthIndex = mesValor.getMes() - 1;
+            valoresFaturamentoMensal.set(monthIndex, mesValor.getValor());
+        }
+        return valoresFaturamentoMensal;
+    }
+
+    public List<Double> getValoresLucroMensalFromDatabase() {
+        List<MesValor> mesValores = vendaRepository.getValoresLucroMensalFromDataBase();
+        List<Double> valoresLucroMensal = new ArrayList<>(Collections.nCopies(12, 0.0));
+        for (MesValor mesValor : mesValores) {
+            int monthIndex = mesValor.getMes() - 1;
+            valoresLucroMensal.set(monthIndex, mesValor.getValor());
+        }
+        return valoresLucroMensal;
+    }
 
 }
 

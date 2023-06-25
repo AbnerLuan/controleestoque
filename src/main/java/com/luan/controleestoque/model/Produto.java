@@ -1,6 +1,7 @@
 package com.luan.controleestoque.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.luan.controleestoque.dto.ProdutoDTO;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -61,6 +62,20 @@ public class Produto {
     public Produto(String nomeProduto, String tipoProduto, String marcaProduto, int quantidadeEstoque,
                    double valorUnitario, double valorTotal, String ean, boolean cadastroSite, boolean cadastroMl,
                    boolean cadastroShoppe, boolean blog) {
+        this.nomeProduto = nomeProduto;
+        this.tipoProduto = tipoProduto;
+        this.marcaProduto = marcaProduto;
+        this.quantidadeEstoque = quantidadeEstoque;
+        this.valorUnitario = valorUnitario;
+        this.valorTotal = valorTotal;
+        this.ean = ean;
+        this.cadastroSite = cadastroSite;
+        this.cadastroMl = cadastroMl;
+        this.cadastroShoppe = cadastroShoppe;
+        this.blog = blog;
+    }
+
+    public Produto(ProdutoDTO produtoDTO) {
         this.nomeProduto = nomeProduto;
         this.tipoProduto = tipoProduto;
         this.marcaProduto = marcaProduto;

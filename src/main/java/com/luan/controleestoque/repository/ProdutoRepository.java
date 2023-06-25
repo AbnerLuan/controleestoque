@@ -22,5 +22,8 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
     Produto findIdByNomeProduto(String nomeProduto);
 
-    List<Produto> findByNomeProdutoLista(Set<String> nomesProdutos);
+    List<Produto> findByNomeProdutoIn(Set<String> nomesProdutos);
+
+    @Query("SELECT SUM(p.valorTotal) FROM Produto p")
+    double calcularValorTotalEstoque();
 }

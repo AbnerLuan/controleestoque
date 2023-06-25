@@ -43,7 +43,6 @@ public class ProdutoDTO {
 
 
     public ProdutoDTO(Produto produto) {
-        this.produtoId = produtoId;
         this.nomeProduto = nomeProduto;
         this.tipoProduto = tipoProduto;
         this.marcaProduto = marcaProduto;
@@ -55,6 +54,5 @@ public class ProdutoDTO {
         this.cadastroMl = cadastroMl;
         this.cadastroShoppe = cadastroShoppe;
         this.blog = blog;
-        this.itens = itens;
     }
 }
