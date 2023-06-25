@@ -20,7 +20,9 @@ public class ProdutoService {
     private final ProdutoRepository produtoRepository;
 
     @Autowired
-    public ProdutoService (ProdutoRepository produtoRepository) {this.produtoRepository = produtoRepository;}
+    public ProdutoService(ProdutoRepository produtoRepository) {
+        this.produtoRepository = produtoRepository;
+    }
 
     public Page<Produto> findAllPageable(Pageable pageable) {
         logger.log(Level.INFO, "Lista de Produtos Carregada.");
@@ -85,5 +87,9 @@ public class ProdutoService {
 
     public List<Produto> findByNomeProdutoIn(Set<String> nomesProdutos) {
         return produtoRepository.findByNomeProdutoIn(nomesProdutos);
+    }
+
+    public double obterValorTotalEstoque() {
+        return produtoRepository.calcularValorTotalEstoque();
     }
 }
