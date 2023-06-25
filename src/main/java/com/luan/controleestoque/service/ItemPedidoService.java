@@ -6,7 +6,6 @@ import com.luan.controleestoque.repository.ItemPedidoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -34,7 +33,7 @@ public class ItemPedidoService {
 
     private void reduzirQuantidadeProdutosEstoque(Long id) {
         Optional<ItemPedido> itemPedido = itemPedidoRepository.findById(id);
-        Produto produto = produtoService.findProdutoByName(itemPedido.get().getNomeProduto());
+        Produto produto = produtoService.findIdProdutoByName(itemPedido.get().getNomeProduto());
         int novaQuantidade = itemPedido.get().getQuantidade() + produto.getQuantidadeEstoque();
         produto.setQuantidadeEstoque(novaQuantidade);
         produtoService.save(produto);

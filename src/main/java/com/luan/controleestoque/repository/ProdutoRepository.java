@@ -22,5 +22,5 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 
     Produto findIdByNomeProduto(String nomeProduto);
 
-    List<Produto> findByNomeProdutoIn(Set<String> nomesProdutos);
+    List<Produto> findByNomeProdutoLista(Set<String> nomesProdutos);
 }

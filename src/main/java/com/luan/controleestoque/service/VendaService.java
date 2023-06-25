@@ -117,7 +117,7 @@ public class VendaService {
                 .map(ItemPedido::getNomeProduto)
                 .collect(Collectors.toSet());
 
-        List<Produto> produtos = produtoService.findByNomeProdutoIn(nomesProdutos);
+        List<Produto> produtos = produtoService.findByNomeProdutoLista(nomesProdutos);
 
         return produtos.stream()
                 .collect(Collectors.toMap(Produto::getNomeProduto, Function.identity()));

@@ -73,5 +73,4 @@ public class Produto {
         this.cadastroShoppe = cadastroShoppe;
         this.blog = blog;
     }
-
 }

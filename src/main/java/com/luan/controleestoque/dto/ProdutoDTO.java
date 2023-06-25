@@ -1,22 +1,60 @@
 package com.luan.controleestoque.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.luan.controleestoque.model.ItemPedido;
-import jakarta.validation.constraints.NotNull;
+import com.luan.controleestoque.model.Produto;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 
-public record ProdutoDTO(Long produtoId,
-                         @NotNull(message = "Nome Produto é Obrigatorio.") String nomeProduto,
-                         @NotNull(message = "Tipo Produto é Obrigatorio.") String tipoProduto,
-                         @NotNull(message = "Marca Produto é Obrigatorio.") String marcaProduto,
-                         int quantidadeEstoque,
-                         double valorUnitario,
-                         double valorTotal,
-                         String ean,
-                         boolean cadastroSite,
-                         boolean cadastroShoppe,
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+public class ProdutoDTO {
+    private Long produtoId;
 
-                         @JsonIgnore boolean blog, List<ItemPedido> itens) {
 
+    private String nomeProduto;
+
+    private String tipoProduto;
+
+    private String marcaProduto;
+
+    private int quantidadeEstoque;
+
+    private double valorUnitario;
+
+    private double valorTotal;
+
+    private String ean;
+
+    private boolean cadastroSite;
+
+    private boolean cadastroMl;
+
+    private boolean cadastroShoppe;
+
+    private boolean blog;
+
+    private List<ItemPedido> itens;
+
+
+    public ProdutoDTO(Produto produto) {
+        this.produtoId = produtoId;
+        this.nomeProduto = nomeProduto;
+        this.tipoProduto = tipoProduto;
+        this.marcaProduto = marcaProduto;
+        this.quantidadeEstoque = quantidadeEstoque;
+        this.valorUnitario = valorUnitario;
+        this.valorTotal = valorTotal;
+        this.ean = ean;
+        this.cadastroSite = cadastroSite;
+        this.cadastroMl = cadastroMl;
+        this.cadastroShoppe = cadastroShoppe;
+        this.blog = blog;
+        this.itens = itens;
+    }
 }
