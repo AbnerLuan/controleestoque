@@ -19,17 +19,19 @@ public class CompraController {
     private final CompraService compraService;
 
     @Autowired
-    public CompraController (CompraService compraService) {this.compraService = compraService;}
+    public CompraController(CompraService compraService) {
+        this.compraService = compraService;
+    }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Compra> findById(@PathVariable Long id){
+    public ResponseEntity<Compra> findById(@PathVariable Long id) {
 
         return ResponseEntity.ok().body(compraService.findById(id));
     }
 
     @GetMapping
     public ResponseEntity<Page<Compra>> findAll(@PageableDefault(sort = "compraId",
-            direction = Sort.Direction.ASC,
+            direction = Sort.Direction.DESC,
             page = 0,
             size = 10) Pageable pageable) {
 
@@ -44,10 +46,14 @@ public class CompraController {
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<Compra> update(@RequestBody Compra compra, @PathVariable Long id){
-        return ResponseEntity.ok().body(compraService.update(compra, id));
+    public ResponseEntity<Compra> update(@RequestBody Compra compra, @PathVariable Long id) {
+        Compra compraAtualizada = compraService.update(compra, id);
+        return ResponseEntity.ok().body(compraAtualizada);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Compra> deleteById(@PathVariable Long id) {return ResponseEntity.noContent().build();}
+    public ResponseEntity<Compra> deleteById(@PathVariable Long id) {
+        compraService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }

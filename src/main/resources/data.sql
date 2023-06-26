@@ -147,6 +147,27 @@ VALUES (true, true, true, true, '718037882383', 'WD', 'SSD M2 WD GREEN 240GB', -
        (true, true, true, true, '555', 'THERMALTAKE', 'FONTE TT SMART 650W WHITE', 1, 'FONTE', 436.5, 436.5),
        (true, true, true, true, '555', 'THERMALTAKE', 'FONTE TT SMART 500W WHITE', 1, 'FONTE', 306.24, 306.24);
 
+INSERT INTO Compra (nome_Fornecedor, valor_Total_Compra, data_Compra)
+VALUES ('JOSVALDO', 25.000, '2023-05-11'),
+       ('ALDO', 5.000, '2023-07-01'),
+       ('MIROSMAR', 35.000, '2023-03-13'),
+       ('MARILDA', 44.000, '2023-02-05'),
+       ('NEIVA', 15.000, '2023-01-31'),
+       ('JOANA', 23.000, '2023-05-03'),
+       ('PAULA', 55.000, '2023-05-16'),
+       ('FABIOLA', 100.000, '2023-05-18');
+
+INSERT INTO ITEM_COMPRA (COMPRA_ID, nome_Produto, quantidade, valor_Unit, valor_Total_ITEM, PRODUTO_ID)
+VALUES  (1, 'SSD M2 WD GREEN 240GB', 2, 10.99, 21.98, 1),
+        (1, 'SSD M2 WD GREEN 120GB', 3, 7.99, 23.97, 2),
+        (2, 'BASILISK CHROMA', 1, 5.99, 5.99, 3),
+        (2, 'GOLIATHUS MOBILE', 5, 3.99, 19.95, 4),
+        (3, 'GOLIATHUS CONTROL MEDIO', 2, 8.99, 17.98, 5),
+        (3, 'GOLIATHUS SPEED MEDIO', 4, 6.49, 25.96, 6),
+        (4, 'GABINETE SI-5100', 1, 9.99, 9.99, 7),
+        (4, 'TECLADO FORTREK SPIDER GK-706', 3, 4.5, 13.5, 8),
+        (5, 'MOUSE FORTREK SPIDER2', 2, 12.49, 24.98, 9);
+
 INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda, valor_frete, valor_tarifa, lucro_venda)
 VALUES ('JOSMAR', 1, 5.200, '2023-05-11', 10.0, 20.0, 0),
        ('JOSE', 2, 5.535, '2023-06-12', 11.0, 21.0, 0),

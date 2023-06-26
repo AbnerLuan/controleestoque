@@ -39,9 +39,6 @@ public class ProdutoDTO {
 
     private boolean blog;
 
-    private List<ItemPedido> itens;
-
-
     public ProdutoDTO(Produto produto) {
         this.nomeProduto = nomeProduto;
         this.tipoProduto = tipoProduto;
