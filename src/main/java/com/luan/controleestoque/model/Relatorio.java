@@ -37,4 +37,6 @@ public class Relatorio implements Serializable {
 
     private double ativoDevedores;
 
+    private double ativoTotal;
+
 }

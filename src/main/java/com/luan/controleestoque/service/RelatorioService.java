@@ -13,13 +13,19 @@ public class RelatorioService {
     private final FiadoService fiadoService;
     private final VendaService vendaService;
     private final GastoService gastoService;
+
+    private final GraficoService graficoService;
+
+    private final CaixaService caixaService;
     @Autowired
     public RelatorioService(ProdutoService produtoService, FiadoService fiadoService, VendaService vendaService,
-                            GastoService gastoService) {
+                            GastoService gastoService, CaixaService caixaService, GraficoService graficoService) {
         this.produtoService = produtoService;
         this.fiadoService = fiadoService;
         this.vendaService = vendaService;
         this.gastoService = gastoService;
+        this.caixaService = caixaService;
+        this.graficoService = graficoService;
     }
 
     public Relatorio gerarRelatorio() {
@@ -42,8 +48,10 @@ public class RelatorioService {
 
         //ativos
         relatorio.setAtivoEstoque(produtoService.obterValorTotalEstoque());
-        //aqui vai o ativo caixa
+        relatorio.setAtivoCaixa(caixaService.buscarUltimoValorSaldoCaixa());
         relatorio.setAtivoDevedores(fiadoService.obterValorTotalFiado());
+        relatorio.setAtivoTotal(relatorio.getAtivoEstoque() + relatorio.getAtivoCaixa() + relatorio.getAtivoDevedores());
+    //    graficoService.calcularAtivoTotal(relatorio);
 
         return relatorio;
     }

@@ -1,9 +1,7 @@
 package com.luan.controleestoque.service;
 
-import com.luan.controleestoque.model.ItemPedido;
-import com.luan.controleestoque.model.MesValor;
-import com.luan.controleestoque.model.Produto;
-import com.luan.controleestoque.model.Venda;
+import com.luan.controleestoque.model.*;
+import com.luan.controleestoque.model.Enum.TipoTransacao;
 import com.luan.controleestoque.repository.VendaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,17 +18,22 @@ import java.util.stream.Collectors;
 @Service
 public class VendaService {
 
+    private static final Logger logger = Logger.getLogger(VendaService.class.getName());
+
     private final VendaRepository vendaRepository;
     private final ProdutoService produtoService;
 
     private final ItemPedidoService itemPedidoService;
-    private static final Logger logger = Logger.getLogger(VendaService.class.getName());
+
+    private final CaixaService caixaService;
 
     @Autowired
-    public VendaService(VendaRepository vendaRepository, ProdutoService produtoService, ItemPedidoService itemPedidoService) {
+    public VendaService(VendaRepository vendaRepository, ProdutoService produtoService,
+                        ItemPedidoService itemPedidoService, CaixaService caixaService) {
         this.vendaRepository = vendaRepository;
         this.produtoService = produtoService;
         this.itemPedidoService = itemPedidoService;
+        this.caixaService = caixaService;
     }
 
     public Page<Venda> findAll(Pageable pageable) {
@@ -58,7 +61,6 @@ public class VendaService {
         }
     }
 
-
     public Venda save(Venda venda) {
         Venda vendaSalva = new Venda(venda);
         vendaSalva.setDataVenda(LocalDate.now());
@@ -75,6 +77,7 @@ public class VendaService {
         vendaSalva.setItens(itensAtualizados);
         vendaRepository.save(vendaSalva);
         logger.log(Level.INFO, "Venda Salva com sucesso.");
+        criarLancamentoCaixa(vendaSalva);
         return vendaSalva;
     }
 
@@ -163,7 +166,7 @@ public class VendaService {
         List<ItemPedido> listaItensAntigos = vendaAntiga.getItens();
 
         Map<String, Produto> nomeParaProdutoMap = buscarProdutosPorNome(vendaNova.getItens());
-        if(!calcularDiferencaDeQuantidadeProdutoVerificaEAtualiza(listaItensAntigos, listaItensAtualizados, nomeParaProdutoMap)){
+        if (!calcularDiferencaDeQuantidadeProdutoVerificaEAtualiza(listaItensAntigos, listaItensAtualizados, nomeParaProdutoMap)) {
             throw new RuntimeException("Quantidade insuficiente de produtos no estoque.");
         }
         for (ItemPedido itemAtualizado : listaItensAtualizados) {
@@ -220,7 +223,6 @@ public class VendaService {
         }
     }
 
-
     public double obterValorTotalFaturamentoAnual() {
         return vendaRepository.calculaValorTotalFaturamentoAnual();
     }
@@ -255,6 +257,18 @@ public class VendaService {
             valoresLucroMensal.set(monthIndex, mesValor.getValor());
         }
         return valoresLucroMensal;
+    }
+
+    public void criarLancamentoCaixa(Venda venda) {
+        Caixa lancamentoVendaCaixa = new Caixa();
+        lancamentoVendaCaixa.setValorTransacao(calculaValorVendaLiquido(venda));
+        lancamentoVendaCaixa.setTipoTransacao(TipoTransacao.ENTRADA);
+        lancamentoVendaCaixa.setObservacao("Lancamento nova venda de ID: " + venda.getVendaId());
+        caixaService.save(lancamentoVendaCaixa);
+    }
+
+    public double calculaValorVendaLiquido(Venda venda) {
+        return venda.getValorTotalVenda() - venda.getValorTarifa() - venda.getValorFrete();
     }
 
 }

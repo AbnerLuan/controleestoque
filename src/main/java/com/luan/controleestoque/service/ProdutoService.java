@@ -86,6 +86,10 @@ public class ProdutoService {
         return produtoDTONovo;
     }
 
+    public Produto findProdutoByName(String nomeProduto) {
+        return produtoRepository.findIdByNomeProduto(nomeProduto);
+    }
+
     public void deleteById(Long id) {
         produtoRepository.deleteById(id);
         logger.log(Level.INFO, "Produto deletado id: " + id);

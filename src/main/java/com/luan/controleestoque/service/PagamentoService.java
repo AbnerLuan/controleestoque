@@ -1,6 +1,7 @@
 package com.luan.controleestoque.service;
 
 import com.luan.controleestoque.model.Caixa;
+import com.luan.controleestoque.model.Enum.TipoTransacao;
 import com.luan.controleestoque.model.Pagamento;
 import com.luan.controleestoque.repository.PagamentoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,14 +34,21 @@ public class PagamentoService {
     }
 
     public void deleteById(Long id) {
-        logger.log(Level.INFO, "Pagamento deletado " + id);
-        pagamentoRepository.deleteById(id);
+        Optional<Pagamento> pagamentoOptional = findById(id);
+        if (pagamentoOptional.isPresent()) {
+            Pagamento pagamento = pagamentoOptional.get();
+            criarLancamentoCaixa(pagamento);
+            logger.log(Level.INFO, "Pagamento deletado " + id);
+            pagamentoRepository.deleteById(id);
+        }
     }
 
     private void criarLancamentoCaixa(Pagamento pagamento){
         Caixa lancamentoPagamentoCaixa = new Caixa();
-     //   lancamentoPagamentoCaixa.setValorTransacao();
+        lancamentoPagamentoCaixa.setValorTransacao(pagamento.getValorPagamento());
+        lancamentoPagamentoCaixa.setTipoTransacao(TipoTransacao.SAIDA);
+        lancamentoPagamentoCaixa.setObservacao("Lancamento exclusao pagamento do fiado ID: " + pagamento.getFiado().getFiadoId());
+        caixaService.save(lancamentoPagamentoCaixa);
     }
-
 
 }

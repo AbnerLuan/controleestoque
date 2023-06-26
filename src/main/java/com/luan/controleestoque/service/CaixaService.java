@@ -38,9 +38,8 @@ public class CaixaService {
         return novoSaldoCaixa;
     }
 
-    private double buscarUltimoValorSaldoCaixa() {
-        double ultimoValorSaldoCaixa = caixaRepository.findUltimoValorSaldo();
-        return ultimoValorSaldoCaixa;
+    public double buscarUltimoValorSaldoCaixa() {
+        return caixaRepository.findUltimoValorSaldo();
     }
 
 }

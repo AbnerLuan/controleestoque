@@ -64,6 +64,8 @@ public class FiadoService {
     }
 
     public void deleteById(Long id) {
+        Fiado fiado = findById(id);
+        criarLancamentoCaixaEntrada(fiado);
         fiadoRepository.deleteById(id);
     }
 
@@ -73,6 +75,14 @@ public class FiadoService {
                 pagamento.setFiado(fiadoAntigo);
             }
         }
+    }
+
+    public void criarLancamentoCaixaEntrada(Fiado fiado){
+        Caixa lancamentoFiadoCaixa = new Caixa();
+        lancamentoFiadoCaixa.setValorTransacao(fiado.getValorPendente());
+        lancamentoFiadoCaixa.setTipoTransacao(TipoTransacao.ENTRADA);
+        lancamentoFiadoCaixa.setObservacao("Lacamento exclusão fiado de ID: " + fiado.getFiadoId());
+        caixaService.save(lancamentoFiadoCaixa);
     }
 
     public void criarLancamentoCaixa(Fiado fiado){
