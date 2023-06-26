@@ -1,6 +1,7 @@
 package com.luan.controleestoque.service;
 
 import com.luan.controleestoque.model.Grafico;
+import com.luan.controleestoque.model.Relatorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -64,15 +65,20 @@ public class GraficoService {
     }
 
     private Grafico criarGraficoAtivo() {
-        Grafico graficoFaturamento = new Grafico();
-        graficoFaturamento.setLabel("Ativos");
-      //  graficoFaturamento.setData(vendaService.getValoresFaturamentoMensalFromDatabase());
-        return graficoFaturamento;
+        Grafico graficoAtivo = new Grafico();
+        graficoAtivo.setLabel("Ativos");
+        graficoAtivo.setData(vendaService.getValoresFaturamentoMensalFromDatabase());
+        return graficoAtivo;
     }
 
-    private Double valorEstoque () {
-        return null;
-    }
+//    public double calcularAtivoTotal(Relatorio relatorio){
+//        double valorTotalAtivo;
+//        double valorTotalEstoque = relatorio.getAtivoEstoque();
+//        double valorTotalCaixa = relatorio.getAtivoCaixa();
+//        double valorTotalDevedores = relatorio.getAtivoDevedores();
+//        valorTotalAtivo = valorTotalEstoque + valorTotalCaixa + valorTotalDevedores;
+//        return valorTotalAtivo;
+//    }
 
 
 }

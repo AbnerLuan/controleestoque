@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,7 +53,17 @@ public class GastoService {
         caixaService.save(lancamentoGastoCaixa);
     }
 
+    private void criarLancamentoCaixaEntrada(Gasto gasto){
+        Caixa lancamentoGastoCaixa = new Caixa();
+        lancamentoGastoCaixa.setValorTransacao(gasto.getValor());
+        lancamentoGastoCaixa.setTipoTransacao(TipoTransacao.ENTRADA);
+        lancamentoGastoCaixa.setObservacao("Lancamento gasto ID: " + gasto.getGastoId().toString());
+        caixaService.save(lancamentoGastoCaixa);
+    }
+
     public void deleteById(Long id) {
+        Optional<Gasto> gasto = gastoRepository.findById(id);
+        criarLancamentoCaixaEntrada(gasto.get());
         logger.log(Level.INFO, "Gasto excluido com sucesso! id: " + id);
         gastoRepository.deleteById(id);
     }

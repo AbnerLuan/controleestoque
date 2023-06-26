@@ -25,7 +25,6 @@ public class Compra {
 
     private String canalCompra;
 
-
     private double valorTotalCompra;
 
     @OneToMany(fetch= FetchType.LAZY, cascade= CascadeType.ALL, mappedBy = "compra")
