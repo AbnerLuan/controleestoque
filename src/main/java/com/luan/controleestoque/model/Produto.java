@@ -76,16 +76,16 @@ public class Produto {
     }
 
     public Produto(ProdutoDTO produtoDTO) {
-        this.nomeProduto = nomeProduto;
-        this.tipoProduto = tipoProduto;
-        this.marcaProduto = marcaProduto;
-        this.quantidadeEstoque = quantidadeEstoque;
-        this.valorUnitario = valorUnitario;
-        this.valorTotal = valorTotal;
-        this.ean = ean;
-        this.cadastroSite = cadastroSite;
-        this.cadastroMl = cadastroMl;
-        this.cadastroShoppe = cadastroShoppe;
-        this.blog = blog;
+        this.nomeProduto = produtoDTO.getNomeProduto();
+        this.tipoProduto = produtoDTO.getTipoProduto();
+        this.marcaProduto = produtoDTO.getMarcaProduto();
+        this.quantidadeEstoque = produtoDTO.getQuantidadeEstoque();
+        this.valorUnitario = produtoDTO.getValorUnitario();
+        this.valorTotal = produtoDTO.getValorTotal();
+        this.ean = produtoDTO.getEan();
+        this.cadastroSite = produtoDTO.isCadastroSite();
+        this.cadastroMl = produtoDTO.isCadastroMl();
+        this.cadastroShoppe = produtoDTO.isCadastroShoppe();
+        this.blog = produtoDTO.isBlog();
     }
 }
