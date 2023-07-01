@@ -34,7 +34,7 @@ public class ItemPedidoService {
     public void deleteById(Long id) {
         Optional<ItemPedido> itemPedido = itemPedidoRepository.findById(id);
         reduzirQuantidadeProdutosEstoque(id, itemPedido.get());
-        criarLancamentoCaixa(itemPedido.get());
+     //   criarLancamentoCaixa(itemPedido.get());
         itemPedidoRepository.deleteById(id);
     }
 

@@ -55,6 +55,7 @@ public class VendaService {
             for (ItemPedido itemPedido : itensPedido) {
                 itemPedidoService.deleteById(itemPedido.getItemId());
             }
+            criarLancamentoCaixaExclusao(venda);
             vendaRepository.deleteById(id);
         } else {
             throw new RuntimeException("Venda não encontrada");
@@ -157,8 +158,25 @@ public class VendaService {
         prepararItensUpdate(vendaAntiga, vendaAtualizada, vendaAtualizada);
         vendaAtualizada.setValorTotalVenda(calcularValorTotalVenda(vendaAtualizada.getItens()));
         vendaAtualizada.setLucroVenda(calcularLucroVenda(vendaAtualizada, vendaAtualizada.getItens()));
+        criarLancamentoCaixaVendaEditada(vendaAtualizada, vendaAntiga);
         logger.log(Level.INFO, "Venda atualizada com sucesso.");
         return vendaRepository.save(vendaAtualizada);
+    }
+
+    public void criarLancamentoCaixaVendaEditada(Venda vendaAtualizada, Venda vendaAntiga) {
+        Caixa lancamentoVendaCaixa = new Caixa();
+        lancamentoVendaCaixa.setValorTransacao(calculaValorVendaLiquidoUpdate(vendaAtualizada, vendaAntiga));
+        if (lancamentoVendaCaixa.getValorTransacao() != 0) {
+            if (lancamentoVendaCaixa.getValorTransacao() > 0) {
+                lancamentoVendaCaixa.setTipoTransacao(TipoTransacao.SAIDA);
+            } else {
+                lancamentoVendaCaixa.setTipoTransacao(TipoTransacao.ENTRADA);
+                lancamentoVendaCaixa.setValorTransacao(lancamentoVendaCaixa.getValorTransacao()*-1);
+            }
+            lancamentoVendaCaixa.setObservacao("Lancamento Edição venda de ID: " + vendaAtualizada.getVendaId());
+            logger.log(Level.INFO, "Lancamento Edição venda de ID: " + vendaAtualizada.getVendaId());
+            caixaService.save(lancamentoVendaCaixa);
+        }
     }
 
     private void prepararItensUpdate(Venda vendaAntiga, Venda vendaNova, Venda vendaAtualizada) {
@@ -264,11 +282,33 @@ public class VendaService {
         lancamentoVendaCaixa.setValorTransacao(calculaValorVendaLiquido(venda));
         lancamentoVendaCaixa.setTipoTransacao(TipoTransacao.ENTRADA);
         lancamentoVendaCaixa.setObservacao("Lancamento nova venda de ID: " + venda.getVendaId());
+        logger.log(Level.INFO, "Lancamento nova venda de ID: " + venda.getVendaId());
         caixaService.save(lancamentoVendaCaixa);
     }
 
+    public void criarLancamentoCaixaExclusao(Venda venda) {
+        Caixa lancamentoVendaCaixa = new Caixa();
+        lancamentoVendaCaixa.setValorTransacao(calculaValorVendaLiquido(venda));
+        lancamentoVendaCaixa.setTipoTransacao(TipoTransacao.SAIDA);
+        lancamentoVendaCaixa.setObservacao("Lancamento exclusao venda de ID: " + venda.getVendaId());
+        logger.log(Level.INFO, "Lancamento Exclusao venda de ID: " + venda.getVendaId());
+        caixaService.save(lancamentoVendaCaixa);
+    }
+
+
     public double calculaValorVendaLiquido(Venda venda) {
-        return venda.getValorTotalVenda() - venda.getValorTarifa() - venda.getValorFrete();
+        return venda.getValorTotalVenda() - venda.getValorFrete() - venda.getValorTarifa();
+    }
+
+    public double calculaValorVendaLiquidoUpdate (Venda vendaAtualizada, Venda vendaAntiga){
+        double valorTransacao = 0;
+        if(vendaAtualizada.getValorTotalVenda() == 0) {
+            valorTransacao =  (vendaAntiga.getValorTotalVenda() - vendaAtualizada.getValorTarifa() - vendaAtualizada.getValorFrete());
+        } else {
+            valorTransacao = (vendaAntiga.getValorTotalVenda() - vendaAntiga.getValorTarifa() - vendaAntiga.getValorFrete()) -
+                    (vendaAtualizada.getValorTotalVenda() - vendaAtualizada.getValorFrete() - vendaAtualizada.getValorTarifa());
+        }
+        return valorTransacao;
     }
 
 }

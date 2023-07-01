@@ -114,4 +114,8 @@ public class FiadoService {
     public double obterValorTotalFiado() {
         return fiadoRepository.calcularValorTotalFiado();
     }
+
+    public Fiado findByCelularCliente(String celularCliente) {
+        return fiadoRepository.findByCelularCliente(celularCliente);
+    }
 }

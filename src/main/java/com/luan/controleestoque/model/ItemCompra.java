@@ -45,4 +45,8 @@ public class ItemCompra {
         this.valorUnit = valorUnit;
         this.valorTotalItem = getQuantidade() * getValorUnit();
     }
+
+    public void calcularValorTotalItem() {
+        this.valorTotalItem = quantidade * valorUnit;
+    }
 }

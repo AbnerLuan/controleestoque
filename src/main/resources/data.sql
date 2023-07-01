@@ -145,28 +145,47 @@ VALUES (true, true, true, true, '718037882383', 'WD', 'SSD M2 WD GREEN 240GB', -
        (true, true, true, true, '555', 'GIGABYTE', 'RX 580 8GB', 1, 'PLACA DE VIDEO', 800, 800),
        (true, true, true, true, '555', 'THERMALTAKE', 'FONTE TT SMART 600W WHITE', 1, 'FONTE', 353, 353),
        (true, true, true, true, '555', 'THERMALTAKE', 'FONTE TT SMART 650W WHITE', 1, 'FONTE', 436.5, 436.5),
-       (true, true, true, true, '555', 'THERMALTAKE', 'FONTE TT SMART 500W WHITE', 1, 'FONTE', 306.24, 306.24);
+       (true, true, true, true, '555', 'THERMALTAKE', 'FONTE TT SMART 500W WHITE', 1, 'FONTE', 306.24, 306.24),
+       (false, false, false, false, '555', 'AMAZON', 'ECHO DOT 5 GERACAO SMART SPEAKER PRETO', 2, 'ACC', 317.55, 635.10),
+       (false, false, false, false, '555', 'AMAZON', 'ECHO DOT 5 GERACAO SMART SPEAKER BRANCO', 1, 'ACC', 317.55, 635.10),
+       (false, false, false, false, '555', 'AMAZON', 'ECHO SHOW 8 2 GERACAO TELA 8 BRANCO', 1, 'ACC', 480.00, 480.00),
+       (false, false, false, false, '555', 'AMAZON', 'ECHO SHOW 5 2 GERACAO TELA 5.5 PRETO', 1, 'ACC', 400.00, 400.00),
+       (false, false, false, false, '555', 'XIAOMI', 'LAMPADA LED XIAOMI MI SMART BULB 810 LUMENS', 4, 'ACC', 35.00, 140.00),
+       (false, false, false, false, '555', 'KINGSTON', 'SSD M2 KINGSTON 2TB NV2 NVME', 2, 'SSD', 519.00, 1038.00),
+       (false, false, false, false, '555', 'KINGSTON', 'SSD M2 KINGSTON 1TB NV2 NVME', 1, 'SSD', 240.00, 240.00),
+       (false, false, false, false, '555', 'KINGSTON', 'SSD M2 KINGSTON 500GB NV2 NVME', 1, 'SSD', 154.84, 154.84),
+       (false, false, false, false, '555', 'XIAOMI', 'SMARTWATCH XIAOMI MIBRO WATCH X1 PRETO', 0, 'ACC', 0, 0),
+       (false, false, false, false, '555', 'XIAOMI', 'SMARTWATCH XIAOMI MIBRO WATCH C2 CINZA', 2, 'ACC', 116.40, 232.80),
+       (false, false, false, false, '555', 'XIAOMI', 'SMARTWATCH XIAOMI MIBRO WATCH C2 BRANCO', 2, 'ACC', 116.40, 232.80),
+       (false, false, false, false, '555', 'KINGSTON', 'MEMORIA HYPERX 16GB 3600MHZ', 1, 'ACC', 227.84, 227.84),
+       (false, false, false, false, '555', 'AMAZON', 'ECHO SHOW 5 2 GERACAO TELA 5.5 BRANCO', 1, 'ACC', 400, 400);
+
+--(blog, cadastro_ml, cadastro_shoppe, cadastro_site, ean, marca_produto, nome_produto,
+   --    quantidade_estoque, tipo_produto, valor_unitario, valor_total)
 
 INSERT INTO Compra (nome_Fornecedor, valor_Total_Compra, data_Compra)
-VALUES ('JOSVALDO', 25.000, '2023-05-11'),
-       ('ALDO', 5.000, '2023-07-01'),
-       ('MIROSMAR', 35.000, '2023-03-13'),
-       ('MARILDA', 44.000, '2023-02-05'),
-       ('NEIVA', 15.000, '2023-01-31'),
-       ('JOANA', 23.000, '2023-05-03'),
-       ('PAULA', 55.000, '2023-05-16'),
-       ('FABIOLA', 100.000, '2023-05-18');
+VALUES ('DIEGO', 6053.16, '2023-06-03');
+
+
 
 INSERT INTO ITEM_COMPRA (COMPRA_ID, nome_Produto, quantidade, valor_Unit, valor_Total_ITEM, PRODUTO_ID)
-VALUES  (1, 'SSD M2 WD GREEN 240GB', 2, 10.99, 21.98, 1),
-        (1, 'SSD M2 WD GREEN 120GB', 3, 7.99, 23.97, 2),
-        (2, 'BASILISK CHROMA', 1, 5.99, 5.99, 3),
-        (2, 'GOLIATHUS MOBILE', 5, 3.99, 19.95, 4),
-        (3, 'GOLIATHUS CONTROL MEDIO', 2, 8.99, 17.98, 5),
-        (3, 'GOLIATHUS SPEED MEDIO', 4, 6.49, 25.96, 6),
-        (4, 'GABINETE SI-5100', 1, 9.99, 9.99, 7),
-        (4, 'TECLADO FORTREK SPIDER GK-706', 3, 4.5, 13.5, 8),
-        (5, 'MOUSE FORTREK SPIDER2', 2, 12.49, 24.98, 9);
+VALUES  (1, 'HEADSET CLOUD STINGER CORE', 1, 125, 125, 121),
+        (1, 'MEMORIA HYPERX 16GB 3600MHZ', 1, 227.84, 227.84, 148),
+        (1, 'MEMORIA HYPERX 8GB 2666MHZ', 2, 108.92, 217.84, 89),
+        (1, 'SMARTWATCH XIAOMI MIBRO WATCH C2 BRANCO', 2, 116.40, 232.80, 147),
+        (1, 'SMARTWATCH XIAOMI MIBRO WATCH C2 CINZA', 2, 116.40, 232.80, 146),
+        (1, 'SMARTWATCH XIAOMI MIBRO WATCH X1 PRETO', 3, 220, 220, 145),
+        (1, 'SSD M2 KINGSTON 500GB NV2 NVME', 1, 154.84, 154.84, 144),
+        (1, 'SSD M2 KINGSTON 1TB NV2 NVME', 1, 240, 240, 143),
+        (1, 'SSD M2 KINGSTON 2TB NV2 NVME', 2, 519, 1038, 142),
+        (1, 'LAMPADA LED XIAOMI MI SMART BULB 810 LUMENS', 4, 35, 140, 141),
+        (1, 'SSD KINGSTON 480GB', 1, 142, 142, 31),
+        (1, 'SSD KINGSTON 240GB', 1, 91.84, 91.84, 30),
+        (1, 'ECHO SHOW 5 2 GERACAO TELA 5.5 BRANCO', 1, 400, 400, 149),
+        (1, 'ECHO SHOW 5 2 GERACAO TELA 5.5 PRETO', 1, 400, 400, 140),
+        (1, 'ECHO SHOW 8 2 GERACAO TELA 8 BRANCO', 1, 480, 480, 139),
+        (1, 'ECHO DOT 5 GERACAO SMART SPEAKER BRANCO', 2, 317.55, 635.10, 138),
+        (1, 'ECHO DOT 5 GERACAO SMART SPEAKER PRETO', 2, 317.55, 635.10, 137);
 
 INSERT INTO Venda (nome_Cliente, canal_Venda, valor_Total_Venda, data_Venda, valor_frete, valor_tarifa, lucro_venda)
 VALUES ('JOSMAR', 1, 5.200, '2023-05-11', 10.0, 20.0, 0),
@@ -255,3 +274,5 @@ VALUES ('2022-11-15', 126.00, 1),
 
 INSERT INTO CAIXA (DATA_LANCAMENTO, SALDO_CAIXA, TIPO_TRANSACAO, VALOR_TRANSACAO, OBSERVACAO)
 VALUES ('2023-06-25', 5000, 1, 5000, 'VALOR INICIAL DO CAIXA');
+
+

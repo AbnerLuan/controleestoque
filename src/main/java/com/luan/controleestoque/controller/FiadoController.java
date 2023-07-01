@@ -30,6 +30,12 @@ public class FiadoController {
         return ResponseEntity.ok().body(fiadoList);
     }
 
+    @GetMapping("/{celularCliente}")
+    public ResponseEntity<Fiado> findByCelularCliente(@PathVariable String celularCliente){
+        Fiado fiado = fiadoService.findByCelularCliente(celularCliente);
+        return ResponseEntity.ok().body(fiado);
+    }
+
     @PostMapping
     public ResponseEntity<Fiado> create(@RequestBody @Valid Fiado fiado){
         Fiado newObj = fiadoService.save(fiado);

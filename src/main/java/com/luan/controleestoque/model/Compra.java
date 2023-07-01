@@ -41,10 +41,10 @@ public class Compra {
     }
 
     public Compra(Compra compra) {
-        this.compraId = compraId;
-        this.nomeFornecedor = nomeFornecedor;
-        this.valorTotalCompra = valorTotalCompra;
-        this.dataCompra = dataCompra;
-        this.itensCompra = itensCompra;
+        this.compraId = compra.getCompraId();
+        this.nomeFornecedor = compra.getNomeFornecedor();
+        this.valorTotalCompra = compra.getValorTotalCompra();
+        this.dataCompra = compra.getDataCompra();
+        this.itensCompra = compra.getItensCompra();
     }
 }
