@@ -30,7 +30,7 @@ public class FiadoController {
         return ResponseEntity.ok().body(fiadoList);
     }
 
-    @GetMapping("/{celularCliente}")
+    @GetMapping("/cliente/{celularCliente}")
     public ResponseEntity<Fiado> findByCelularCliente(@PathVariable String celularCliente){
         Fiado fiado = fiadoService.findByCelularCliente(celularCliente);
         return ResponseEntity.ok().body(fiado);
