@@ -64,26 +64,17 @@ public class ProdutoService {
 
         return modelMapper.map(salvarProduto, ProdutoDTO.class);
     }
-    public ProdutoDTO update(ProdutoDTO produtoDTONovo, Long id) {
+    public ProdutoDTO update(ProdutoDTO produtoDTO, Long id) {
+
         ProdutoDTO produtoAntigo = findById(id);
-        produtoAntigo.setNomeProduto(produtoDTONovo.getNomeProduto());
-        produtoAntigo.setTipoProduto(produtoDTONovo.getTipoProduto());
-        produtoAntigo.setMarcaProduto(produtoDTONovo.getMarcaProduto());
-        produtoAntigo.setQuantidadeEstoque(produtoDTONovo.getQuantidadeEstoque());
-        produtoAntigo.setValorUnitario(produtoDTONovo.getValorUnitario());
-        produtoAntigo.setValorTotal(produtoDTONovo.getValorTotal());
-        produtoAntigo.setEan(produtoDTONovo.getEan());
-        produtoAntigo.setCadastroSite(produtoDTONovo.isCadastroSite());
-        produtoAntigo.setCadastroMl(produtoDTONovo.isCadastroMl());
-        produtoAntigo.setCadastroShoppe(produtoDTONovo.isCadastroShoppe());
-        produtoAntigo.setBlog(produtoDTONovo.isBlog());
+        produtoAntigo = produtoDTO;
+        Produto produtoAtualizado = new Produto(produtoAntigo);
 
-//        Produto produtoNovo = new Produto(produtoAntigo);
-//        ProdutoDTO produtoDTONovo =
+        produtoAtualizado.setProdutoId(id);
+        produtoRepository.save(produtoAtualizado);
+        logger.log(Level.INFO, "Produto de id: " + id + " atualizado com sucesso!");
 
-
-
-        return produtoDTONovo;
+        return modelMapper.map(produtoAtualizado, ProdutoDTO.class);
     }
 
     public Produto findProdutoByName(String nomeProduto) {

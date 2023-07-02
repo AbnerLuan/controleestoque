@@ -40,16 +40,16 @@ public class ProdutoDTO {
     private boolean blog;
 
     public ProdutoDTO(Produto produto) {
-        this.nomeProduto = nomeProduto;
-        this.tipoProduto = tipoProduto;
-        this.marcaProduto = marcaProduto;
-        this.quantidadeEstoque = quantidadeEstoque;
-        this.valorUnitario = valorUnitario;
-        this.valorTotal = valorTotal;
-        this.ean = ean;
-        this.cadastroSite = cadastroSite;
-        this.cadastroMl = cadastroMl;
-        this.cadastroShoppe = cadastroShoppe;
-        this.blog = blog;
+        this.nomeProduto = produto.getNomeProduto();
+        this.tipoProduto = produto.getTipoProduto();
+        this.marcaProduto = produto.getMarcaProduto();
+        this.quantidadeEstoque = produto.getQuantidadeEstoque();
+        this.valorUnitario = produto.getValorUnitario();
+        this.valorTotal = produto.getValorTotal();
+        this.ean = produto.getEan();
+        this.cadastroSite = produto.isCadastroSite();
+        this.cadastroMl = produto.isCadastroMl();
+        this.cadastroShoppe = produto.isCadastroShoppe();
+        this.blog = produto.isBlog();
     }
 }
