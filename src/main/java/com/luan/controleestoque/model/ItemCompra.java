@@ -23,7 +23,9 @@ public class ItemCompra {
     @JoinColumn(name = "compra_Id")
     private Compra compra;
 
+    @JsonIgnore
     @ManyToOne
+    @JoinColumn (name = "produto_Id")
     private Produto produto;
 
     private String nomeProduto;
@@ -42,5 +44,9 @@ public class ItemCompra {
         this.quantidade = quantidade;
         this.valorUnit = valorUnit;
         this.valorTotalItem = getQuantidade() * getValorUnit();
+    }
+
+    public void calcularValorTotalItem() {
+        this.valorTotalItem = quantidade * valorUnit;
     }
 }

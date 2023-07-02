@@ -5,10 +5,10 @@ import com.luan.controleestoque.service.VendaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @CrossOrigin(origins = "*")
 @RestController
@@ -25,9 +25,14 @@ public class VendaController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Venda>> findAll(Pageable pageable){
+    public ResponseEntity<Page<Venda>> findAll(@PageableDefault(sort = "vendaId",
+            direction = Sort.Direction.DESC,
+            page = 0,
+            size = 10) Pageable pageable){
 
-        return ResponseEntity.ok().body(vendaService.findAll(pageable));
+        Page<Venda> vendasPage = vendaService.findAll(pageable);
+
+        return ResponseEntity.ok().body(vendasPage);
     }
 
     @PostMapping
@@ -36,8 +41,8 @@ public class VendaController {
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<Venda> update(@RequestBody Venda venda, @PathVariable Long id) {
-        Venda vendaAtualizada = vendaService.update(venda, id);
+    public ResponseEntity<Venda> update(@PathVariable Long id, @RequestBody Venda venda) {
+        Venda vendaAtualizada = vendaService.update(id, venda);
         return ResponseEntity.ok().body(vendaAtualizada);
     }
 

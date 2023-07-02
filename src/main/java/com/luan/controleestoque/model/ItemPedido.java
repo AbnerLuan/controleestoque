@@ -2,14 +2,9 @@ package com.luan.controleestoque.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-
-
-import java.util.List;
 
 @NoArgsConstructor
 @Getter
@@ -30,7 +25,6 @@ public class ItemPedido {
 
     @JsonIgnore
     @ManyToOne
-
     @JoinColumn(name = "venda_id")
     private Venda venda;
 
@@ -40,7 +34,7 @@ public class ItemPedido {
 
     private double valorTotalItem;
 
-    public ItemPedido(Long itemId, String nomeProduto, Produto produto, Venda venda, int quantidade, double valorUnit) {
+    public ItemPedido( String nomeProduto, Produto produto, Venda venda, int quantidade, double valorUnit) {
         this.itemId = itemId;
         this.nomeProduto = nomeProduto;
         this.produto = produto;
@@ -48,6 +42,12 @@ public class ItemPedido {
         this.quantidade = quantidade;
         this.valorUnit = valorUnit;
         calcularValorTotalItem();
+    }
+
+    public ItemPedido(ItemPedido item) {
+        this.itemId = item.getItemId();
+        this.nomeProduto = item.getNomeProduto();
+        this.quantidade = item.getQuantidade();
     }
 
     public void calcularValorTotalItem() {

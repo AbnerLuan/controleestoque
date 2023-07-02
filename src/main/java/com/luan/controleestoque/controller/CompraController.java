@@ -5,6 +5,8 @@ import com.luan.controleestoque.service.CompraService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,18 +19,25 @@ public class CompraController {
     private final CompraService compraService;
 
     @Autowired
-    public CompraController (CompraService compraService) {this.compraService = compraService;}
+    public CompraController(CompraService compraService) {
+        this.compraService = compraService;
+    }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Compra> findById(@PathVariable Long id){
+    public ResponseEntity<Compra> findById(@PathVariable Long id) {
 
         return ResponseEntity.ok().body(compraService.findById(id));
     }
 
     @GetMapping
-    public ResponseEntity<Page<Compra>> findAll(Pageable pageable) {
+    public ResponseEntity<Page<Compra>> findAll(@PageableDefault(sort = "compraId",
+            direction = Sort.Direction.DESC,
+            page = 0,
+            size = 10) Pageable pageable) {
 
-        return ResponseEntity.ok().body(compraService.findAll(pageable));
+        Page<Compra> comprasPage = compraService.findAll(pageable);
+
+        return ResponseEntity.ok().body(comprasPage);
     }
 
     @PostMapping
@@ -37,10 +46,14 @@ public class CompraController {
     }
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<Compra> update(@RequestBody Compra compra, @PathVariable Long id){
-        return ResponseEntity.ok().body(compraService.update(compra, id));
+    public ResponseEntity<Compra> update(@RequestBody Compra compra, @PathVariable Long id) {
+        Compra compraAtualizada = compraService.update(compra, id);
+        return ResponseEntity.ok().body(compraAtualizada);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Compra> deleteById(@PathVariable Long id) {return ResponseEntity.noContent().build();}
+    public ResponseEntity<Compra> deleteById(@PathVariable Long id) {
+        compraService.deleteById(id);
+        return ResponseEntity.noContent().build();
+    }
 }
